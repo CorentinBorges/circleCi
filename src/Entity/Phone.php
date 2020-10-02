@@ -5,6 +5,7 @@ namespace App\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -27,13 +28,15 @@ class Phone
      * @var string
      *
      * @ORM\Column(type="string", length=50)
+     * @Groups({"list_phone"})
      */
     private $brand;
 
     /**
      * @var string
      *
-     * @ORM\Column (type="text", length=60)
+     * @ORM\Column (type="string", length=60)
+     * @Groups({"list_phone"})
      */
     private $model;
 
@@ -41,6 +44,7 @@ class Phone
      * @var float
      *
      * @ORM\Column(type="decimal",precision= 5, scale = 2)
+     * @Groups({"list_phone"})
      */
     private $price;
 
@@ -111,6 +115,11 @@ class Phone
     public function getBrand(): string
     {
         return $this->brand;
+    }
+
+    public function getModel(): string
+    {
+        return $this->model;
     }
 
     public function getPrice(): int
