@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Entity\Phone;
 use App\Repository\ClientRepository;
 use App\Repository\PhoneRepository;
 use App\Responder\JsonResponder;
@@ -41,6 +42,17 @@ class PhoneController extends BaseEntityController
         $listPhone = $this->phoneRepository->findAll();
         $listJson = $this->serializer->serialize($listPhone, 'json',['groups'=>'list_phone']);
         return $jsonResponder::responder($listJson);
+    }
+
+    /**
+     * @Route("/phones/{id}",name="detail_phone",methods={"GET"})
+     * @param Phone $phone
+     * @return Response
+     */
+    public function detailOnePhone(Phone $phone)
+    {
+        $phoneJson = $this->serializer->serialize($phone, 'json');
+        return JsonResponder::responder($phoneJson);
     }
 
 //    /**
