@@ -9,6 +9,7 @@ use App\Repository\ClientRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -30,6 +31,7 @@ class User
      * @var string
      *
      * @ORM\Column(type="string", length=64)
+     * @Groups({"list_users"})
      */
     private $fullName;
 
@@ -37,6 +39,7 @@ class User
      * @var string
      *
      * @ORM\Column(type="string", length=50)
+     * @Groups({"list_users"})
      */
     private $username;
 
@@ -44,6 +47,7 @@ class User
      * @var string
      *
      * @ORM\Column(type="string")
+     * @Groups({"list_users"})
      */
     private $email;
 

@@ -8,6 +8,7 @@ use App\DTO\Users\CreateUser\CreateUserFromRequestInput;
 use App\Entity\User;
 use App\Helper\ViolationBuilder;
 use App\Repository\ClientRepository;
+use App\Repository\UserRepository;
 use App\Responder\JsonResponder;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
@@ -23,16 +24,32 @@ class UserController Extends BaseEntityController
      * @var ClientRepository
      */
     private $clientRepository;
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
 
     public function __construct(
         SerializerInterface $serializer,
         EntityManagerInterface $em,
         ValidatorInterface $validator,
-        ClientRepository $clientRepository
+        ClientRepository $clientRepository,
+        UserRepository $userRepository
     )
     {
         parent::__construct($serializer,$em,$validator);
         $this->clientRepository = $clientRepository;
+        $this->userRepository = $userRepository;
+    }
+
+    /**
+     * @Route("/users",name="show_user",methods={"GET"})
+     */
+    public function usersList()
+    {
+        $usersList = $this->userRepository->findAll();
+        $listJson = $this->serializer->serialize($usersList, 'json',['groups'=>'list_users']);
+        return JsonResponder::responder($listJson);
     }
 
     /**
