@@ -143,7 +143,8 @@ class Phone
         return $this->description;
     }
 
-    public static function createFromRequest(\App\DTO\Phones\CreatePhones\CreatePhoneFromRequestInput $object)
+    // todo:delete method if unsused
+    /*public static function createFromRequest(\App\DTO\Phones\CreatePhones\CreatePhoneFromRequestInput $object)
     {
         return new self(
             $object->brand,
@@ -156,5 +157,5 @@ class Phone
             $object->description
 
         );
-    }
+    }*/
 }

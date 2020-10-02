@@ -4,6 +4,8 @@
 namespace App\Entity;
 
 
+use App\DTO\Users\CreateUser\CreateUserFromRequestInput;
+use App\Repository\ClientRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
@@ -57,5 +59,44 @@ class User
         $this->username = $username;
         $this->email = $email;
         $this->client = $client;
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function getFullName(): string
+    {
+        return $this->fullName;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getClient(): Client
+    {
+        return $this->client;
+    }
+
+    public static function createUserFromRequest(CreateUserFromRequestInput $requestInput, ClientRepository $clientRepository)
+    {
+        /**
+         * @var Client $client
+         */
+        $client = $clientRepository->findOneBy(['name' => $requestInput->clientName]);
+        return new self(
+            $requestInput->fullName,
+            $requestInput->username,
+            $requestInput->email,
+            $client
+        );
     }
 }

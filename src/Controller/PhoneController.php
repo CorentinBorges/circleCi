@@ -4,45 +4,12 @@
 namespace App\Controller;
 
 
-use App\DTO\Phones\CreatePhones\CreatePhoneFromRequestInput;
-use App\Entity\Phone;
-use App\Helper\ViolationBuilder;
 use App\Responder\JsonResponder;
-use App\Services\ResponseFactory;
-use App\Services\SerializerFactory;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Constraints\Json;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class PhoneController
+class PhoneController extends BaseEntityController
 {
-
-    /**
-     * @var Serializer
-     */
-    private $serializer;
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
-
-    public function __construct(SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator)
-    {
-        $this->serializer = $serializer;
-        $this->em = $em;
-        $this->validator = $validator;
-    }
 
     /**
      * @Route("/phones", name="list_phones", methods={"GET"})
@@ -57,12 +24,12 @@ class PhoneController
         return $jsonResponder::responder($listJson);
     }
 
-    /**
-     * @Route ("/phones", name="create_phone", methods={"POST"})
-     * @param Request $request
-     * @return Response
-     */
-    public function createPhone(Request $request)
+//    /**
+//     * @Route ("/phones", name="create_phone", methods={"POST"})
+//     * @param Request $request
+//     * @return Response
+//     */
+    /*public function createPhone(Request $request)
     {
 
         $phoneObject = $this->serializer->deserialize(
@@ -81,5 +48,5 @@ class PhoneController
         $this->em->persist($phone);
         $this->em->flush();
         return JsonResponder::responder(null, Response::HTTP_CREATED, ['Location' => "phones" . $phone->getId()]);
-    }
+    }*/
 }
