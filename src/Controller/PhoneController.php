@@ -5,28 +5,14 @@ namespace App\Controller;
 
 
 use App\Responder\JsonResponder;
-use App\Services\ResponseFactory;
-use App\Services\SerializerFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
-class PhoneController
+class PhoneController extends BaseEntityController
 {
 
     /**
-     * @var Serializer
-     */
-    private $serializer;
-
-    public function __construct(Serializer $serializer)
-    {
-        $this->serializer = $serializer;
-    }
-    /**
-     * @Route("/phones", name="app_phones", methods={"GET"})
+     * @Route("/phones", name="list_phones", methods={"GET"})
      * @param JsonResponder $jsonResponder
      * @return Response
      */
@@ -36,6 +22,31 @@ class PhoneController
         $listJson = $this->serializer->serialize($list, 'json');
         echo $listJson;
         return $jsonResponder::responder($listJson);
-
     }
+
+//    /**
+//     * @Route ("/phones", name="create_phone", methods={"POST"})
+//     * @param Request $request
+//     * @return Response
+//     */
+    /*public function createPhone(Request $request)
+    {
+
+        $phoneObject = $this->serializer->deserialize(
+            $request->getContent(),
+            CreatePhoneFromRequestInput::class,
+            'json'
+        );
+
+        $errors=$this->validator->validate($phoneObject);
+        if($errors->count() > 0 ){
+            $listErrors = ViolationBuilder::build($errors);
+            return JsonResponder::responder(json_encode($listErrors),Response::HTTP_BAD_REQUEST);
+        }
+
+        $phone = Phone::createFromRequest($phoneObject);
+        $this->em->persist($phone);
+        $this->em->flush();
+        return JsonResponder::responder(null, Response::HTTP_CREATED, ['Location' => "phones" . $phone->getId()]);
+    }*/
 }
