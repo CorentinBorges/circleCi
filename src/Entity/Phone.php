@@ -31,9 +31,16 @@ class Phone
     private $brand;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(type="decimal",precision= 2, scale = 4)
+     * @ORM\Column (type="text")
+     */
+    private $model;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(type="decimal",precision= 5, scale = 2)
      */
     private $price;
 
@@ -44,8 +51,19 @@ class Phone
      */
     private $system;
 
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     */
     private $screenSize;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     */
     private $storage;
 
     /**
@@ -63,34 +81,26 @@ class Phone
      */
     private $description;
 
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $releaseDate;
-
     public function __construct(
         string $brand,
+        string $model,
         int $price,
         string $system,
         int $screenSize,
         int $storage,
         string $color,
-        string $description,
-        int $releaseDate
+        string $description
     )
     {
         $this->id= Uuid::v4()->__toString();
         $this->brand = $brand;
+        $this->model = $model;
         $this->price = $price;
         $this->system= $system;
         $this->screenSize = $screenSize;
         $this->storage = $storage;
         $this->color = $color;
         $this->description = $description;
-        $this->releaseDate = $releaseDate;
     }
 
     public function getId(): string
@@ -133,9 +143,18 @@ class Phone
         return $this->description;
     }
 
-    public function getReleaseDate(): int
+    public static function createFromRequest(\App\DTO\Phones\CreatePhones\CreatePhoneFromRequestInput $object)
     {
-        return $this->releaseDate;
-    }
+        return new self(
+            $object->brand,
+            $object->model,
+            $object->price,
+            $object->system,
+            $object->screenSize,
+            $object->storage,
+            $object->color,
+            $object->description
 
+        );
+    }
 }
