@@ -31,7 +31,6 @@ class User
      * @var string
      *
      * @ORM\Column(type="string", length=64)
-     * @Groups({"list_users"})
      */
     private $fullName;
 
@@ -85,6 +84,11 @@ class User
     public function getEmail(): string
     {
         return $this->email;
+    }
+
+    public function getClientName()
+    {
+        return $this->getClient()->getName();
     }
 
     public function getClient(): Client
