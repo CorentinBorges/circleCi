@@ -15,6 +15,10 @@ use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -43,13 +47,38 @@ class UserController Extends BaseEntityController
     }
 
     /**
-     * @Route("/users",name="show_user",methods={"GET"})
+     * @Route("/users",name="show_users",methods={"GET"})
      */
     public function usersList()
     {
         $usersList = $this->userRepository->findAll();
         $listJson = $this->serializer->serialize($usersList, 'json',['groups'=>'list_users']);
         return JsonResponder::responder($listJson);
+    }
+
+    /**
+     * @Route("/users/{id}",name="show_user_details",methods={"GET"})
+     * @param User $user
+     * @return Response
+     */
+    public function userDetails(User $user)
+    {
+        /*$defaultContext = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
+                return $object->getName();
+            },
+        ];
+        $normalizer = new ObjectNormalizer(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $defaultContext);
+        $serializer = new Serializer([$normalizer], [new JsonEncoder()]);*/
+        $userJson = $this->serializer->serialize($user, 'json',[AbstractNormalizer::IGNORED_ATTRIBUTES=>['client']]);
+        return JsonResponder::responder($userJson);
     }
 
     /**
