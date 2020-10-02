@@ -4,12 +4,32 @@
 namespace App\Controller;
 
 
+use App\Repository\ClientRepository;
+use App\Repository\PhoneRepository;
 use App\Responder\JsonResponder;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class PhoneController extends BaseEntityController
 {
+    /**
+     * @var PhoneRepository
+     */
+    private $phoneRepository;
+
+    public function __construct(
+        SerializerInterface $serializer,
+        EntityManagerInterface $em,
+        ValidatorInterface $validator,
+        PhoneRepository $phoneRepository
+    )
+    {
+        parent::__construct($serializer,$em,$validator);
+        $this->phoneRepository = $phoneRepository;
+    }
 
     /**
      * @Route("/phones", name="list_phones", methods={"GET"})
@@ -18,9 +38,8 @@ class PhoneController extends BaseEntityController
      */
     public function allPhones( JsonResponder $jsonResponder)
     {
-        $list = ['test', 'test2', 'test3'];
-        $listJson = $this->serializer->serialize($list, 'json');
-        echo $listJson;
+        $listPhone = $this->phoneRepository->findAll();
+        $listJson = $this->serializer->serialize($listPhone, 'json',['groups'=>'list_phone']);
         return $jsonResponder::responder($listJson);
     }
 
