@@ -10,6 +10,7 @@ use App\Helper\ViolationBuilder;
 use App\Repository\ClientRepository;
 use App\Responder\JsonResponder;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,6 +39,7 @@ class UserController Extends BaseEntityController
      * @Route ("/users",name="create_user", methods={"POST"})
      * @param Request $request
      * @return Response
+     * @throws EntityNotFoundException
      */
     public function createUser(Request $request)
     {

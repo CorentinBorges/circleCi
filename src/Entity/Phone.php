@@ -26,14 +26,14 @@ class Phone
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=50)
      */
     private $brand;
 
     /**
      * @var string
      *
-     * @ORM\Column (type="text")
+     * @ORM\Column (type="text", length=60)
      */
     private $model;
 
@@ -47,7 +47,7 @@ class Phone
     /**
      * @var string
      *
-     * @ORM\Column (type="string")
+     * @ORM\Column (type="string", length=50)
      */
     private $system;
 
@@ -69,7 +69,7 @@ class Phone
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=16)
      *
      */
     private $color;

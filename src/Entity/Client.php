@@ -36,7 +36,7 @@ class Client
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=64)
      */
     private $name;
 

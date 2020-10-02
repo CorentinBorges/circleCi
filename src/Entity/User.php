@@ -6,6 +6,8 @@ namespace App\Entity;
 
 use App\DTO\Users\CreateUser\CreateUserFromRequestInput;
 use App\Repository\ClientRepository;
+use Doctrine\DBAL\Exception;
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
@@ -27,14 +29,14 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=64)
      */
     private $fullName;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=50)
      */
     private $username;
 
@@ -88,6 +90,11 @@ class User
 
     public static function createUserFromRequest(CreateUserFromRequestInput $requestInput, ClientRepository $clientRepository)
     {
+        if (! $clientRepository->findOneBy(['name' => $requestInput->clientName])){
+            throw new EntityNotFoundException(
+                'Client with the name: ' . $requestInput->clientName . ' not found'
+            );
+        }
         /**
          * @var Client $client
          */
