@@ -63,20 +63,6 @@ class UserController Extends BaseEntityController
      */
     public function userDetails(User $user)
     {
-        /*$defaultContext = [
-            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object, $format, $context) {
-                return $object->getName();
-            },
-        ];
-        $normalizer = new ObjectNormalizer(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $defaultContext);
-        $serializer = new Serializer([$normalizer], [new JsonEncoder()]);*/
         $userJson = $this->serializer->serialize($user, 'json',[AbstractNormalizer::IGNORED_ATTRIBUTES=>['client']]);
         return JsonResponder::responder($userJson);
     }
@@ -110,4 +96,18 @@ class UserController Extends BaseEntityController
 
         return JsonResponder::responder(null, Response::HTTP_CREATED,['Location'=>'api/users/'.$user->getId()]);
     }
+
+    /**
+     * @Route ("/users/{id}",name="delete_user",methods={"DELETE"})
+     * @param User $user
+     * @return Response
+     */
+    public function deleteUser(User $user)
+    {
+        $this->em->remove($user);
+        $this->em->flush();
+        return JsonResponder::responder(null);
+
+    }
+
 }
