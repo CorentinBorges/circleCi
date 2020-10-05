@@ -115,4 +115,16 @@ class PhoneController extends BaseEntityController
 
         return JsonResponder::responder(null, Response::HTTP_OK, ['Location' => 'phones' . $phone->getId()]);
     }
+
+    /**
+     * @Route("/phones/{id}",name="delete_phone",methods={"DELETE"})
+     * @param Phone $phone
+     * @return Response
+     */
+    public function deletePhone(Phone $phone)
+    {
+        $this->em->remove($phone);
+        $this->em->flush();
+        return JsonResponder::responder(null);
+    }
 }

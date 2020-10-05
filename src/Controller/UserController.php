@@ -98,7 +98,7 @@ class UserController Extends BaseEntityController
     }
 
     /**
-     * @Route ("/users/{id}",name="delete_user",methods={"DELETE"})
+     * @Route("/users/{id}",name="delete_user",methods={"DELETE"})
      * @param User $user
      * @return Response
      */
