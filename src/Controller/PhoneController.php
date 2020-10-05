@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\DTO\Phone\CreatePhone\CreatePhoneFromRequestInput;
+use App\DTO\Phone\UpdatePhone\UpdatePhoneFromRequestInput;
 use App\Entity\Phone;
 use App\Helper\ViolationBuilder;
 use App\Repository\PhoneRepository;
@@ -73,8 +74,6 @@ class PhoneController extends BaseEntityController
             'json'
         );
 
-
-
         $errors=$this->validator->validate($phoneObject);
         if($errors->count() > 0 ){
             $listErrors = ViolationBuilder::build($errors);
@@ -85,5 +84,28 @@ class PhoneController extends BaseEntityController
         $this->em->persist($phone);
         $this->em->flush();
         return JsonResponder::responder(null, Response::HTTP_CREATED, ['Location' => "phones" . $phone->getId()]);
+    }
+
+    public function updatePhone(Phone $phone, Request $request)
+    {
+        /**
+         * @var CreatePhoneFromRequestInput $newPhoneDTO
+         */
+        $newPhoneDTO = $this->serializer->deserialize(
+            $request->getContent(),
+            CreatePhoneFromRequestInput::class,
+            'json'
+        );
+
+        $errors = $this->validator->validate($newPhoneDTO);
+        if ($errors->count() > 0) {
+            $listErrors=ViolationBuilder::build($errors);
+            return JsonResponder::responder(json_encode($listErrors), Response::HTTP_BAD_REQUEST);
+        }
+
+        $phone->updateFromRequest($newPhoneDTO);
+        $this->em->flush();
+
+        return JsonResponder::responder(null, Response::HTTP_OK, ['Location' => 'phones' . $phone->getId()]);
     }
 }

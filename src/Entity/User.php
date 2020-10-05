@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * Class User
+ * Class Users
  * @package App\Entity
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")

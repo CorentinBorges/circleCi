@@ -1,14 +1,14 @@
 <?php
 
 
-namespace App\DTO\Phone\CreatePhone;
+namespace App\DTO\Phone\UpdatePhone;
 
 
-use App\Repository\PhoneRepository;
-use App\Validator\Constraints as AcmeAssert;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as AcmeAssert;
 
-class CreatePhoneFromRequestInput
+
+class UpdatePhoneFromRequestInput
 {
     /**
      * @var string
@@ -21,7 +21,6 @@ class CreatePhoneFromRequestInput
 
     /**
      * @var string
-     * @AcmeAssert\Phones\isUniquePhoneProperty()
      * @Assert\Length(max="60", maxMessage="The model can't exceed 60 characters")
      * @Assert\Type(type="string", message="Model has to be string type")
      * @Assert\NotBlank (message="You have to enter a model")
@@ -87,4 +86,6 @@ class CreatePhoneFromRequestInput
      */
     public $description;
 
+
 }
+

@@ -5,6 +5,7 @@ namespace App\Entity;
 
 
 use App\DTO\Phone\CreatePhone\CreatePhoneFromRequestInput;
+use App\DTO\Phone\UpdatePhone\UpdatePhoneFromRequestInput;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
@@ -173,5 +174,56 @@ class Phone
             $object->description
 
         );
+    }
+
+    public function updateFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        $this->updateBrandFromRequest($phoneDTO);
+        $this->updateModelFromRequest($phoneDTO);
+        $this->updatePriceFromRequest($phoneDTO);
+        $this->updateSystemFromRequest($phoneDTO);
+        $this->updateScreenSizeFromRequest($phoneDTO);
+        $this->updateStorageFromRequest($phoneDTO);
+        $this->updateColorFromRequest($phoneDTO);
+        $this->updateDescriptionFromRequest($phoneDTO);
+    }
+
+    private function updateBrandFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        return $this->brand=$phoneDTO->brand;
+    }
+
+    private function updateModelFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        return $this->model=$phoneDTO->model;
+    }
+
+    private function updatePriceFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        return $this->price=$phoneDTO->price;
+    }
+
+    private function updateSystemFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        return $this->system=$phoneDTO->system;
+    }
+
+    private function updateScreenSizeFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        return $this->screenSize=$phoneDTO->screenSize;
+    }
+
+    private function updateStorageFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        return $this->storage=$phoneDTO->storage;
+    }
+
+    private function updateColorFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        return $this->color=$phoneDTO->color;
+    }
+    private function updateDescriptionFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        return $this->description=$phoneDTO->description;
     }
 }
