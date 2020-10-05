@@ -31,6 +31,7 @@ class CreatePhoneFromRequestInput
 
     /**
      * @var float
+     *
      *@Assert\Range(
      *     min="10.00",
      *     minMessage="The price can't be under 10",
