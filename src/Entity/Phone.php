@@ -44,7 +44,7 @@ class Phone
     /**
      * @var float
      *
-     * @ORM\Column(type="decimal",precision= 5, scale = 2)
+     * @ORM\Column(type="decimal",precision= 6, scale = 2)
      * @Groups({"list_phone"})
      */
     private $price;
@@ -55,7 +55,6 @@ class Phone
      * @ORM\Column (type="string", length=50)
      */
     private $system;
-
 
     /**
      * @var int
@@ -86,6 +85,13 @@ class Phone
      */
     private $description;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $createdAt;
+
     public function __construct(
         string $brand,
         string $model,
@@ -106,6 +112,7 @@ class Phone
         $this->storage = $storage;
         $this->color = $color;
         $this->description = $description;
+        $this->createdAt = time();
     }
 
     public function getId(): string

@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\DTO\Phone\CreatePhone\CreatePhoneFromRequestInput;
 use App\Entity\Phone;
 use App\Helper\ViolationBuilder;
-use App\Repository\ClientRepository;
 use App\Repository\PhoneRepository;
 use App\Responder\JsonResponder;
 use Doctrine\ORM\EntityManagerInterface;
