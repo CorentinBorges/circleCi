@@ -4,6 +4,7 @@
 namespace App\Entity;
 
 
+use App\DTO\Phone\CreatePhone\CreatePhoneFromRequestInput;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
@@ -43,7 +44,7 @@ class Phone
     /**
      * @var float
      *
-     * @ORM\Column(type="decimal",precision= 5, scale = 2)
+     * @ORM\Column(type="decimal",precision= 6, scale = 2)
      * @Groups({"list_phone"})
      */
     private $price;
@@ -55,11 +56,10 @@ class Phone
      */
     private $system;
 
-
     /**
-     * @var int
+     * @var float
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="float", precision=3, scale=2)
      */
     private $screenSize;
 
@@ -85,6 +85,13 @@ class Phone
      */
     private $description;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer")
+     */
+    private $createdAt;
+
     public function __construct(
         string $brand,
         string $model,
@@ -105,6 +112,7 @@ class Phone
         $this->storage = $storage;
         $this->color = $color;
         $this->description = $description;
+        $this->createdAt = time();
     }
 
     public function getId(): string
@@ -152,8 +160,7 @@ class Phone
         return $this->description;
     }
 
-    // todo:delete method if unsused
-    /*public static function createFromRequest(\App\DTO\Phones\CreatePhones\CreatePhoneFromRequestInput $object)
+    public static function createFromRequest(CreatePhoneFromRequestInput $object)
     {
         return new self(
             $object->brand,
@@ -166,5 +173,5 @@ class Phone
             $object->description
 
         );
-    }*/
+    }
 }

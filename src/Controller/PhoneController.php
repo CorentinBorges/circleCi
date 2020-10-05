@@ -4,11 +4,13 @@
 namespace App\Controller;
 
 
+use App\DTO\Phone\CreatePhone\CreatePhoneFromRequestInput;
 use App\Entity\Phone;
-use App\Repository\ClientRepository;
+use App\Helper\ViolationBuilder;
 use App\Repository\PhoneRepository;
 use App\Responder\JsonResponder;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -55,19 +57,23 @@ class PhoneController extends BaseEntityController
         return JsonResponder::responder($phoneJson);
     }
 
-//    /**
-//     * @Route ("/phones", name="create_phone", methods={"POST"})
-//     * @param Request $request
-//     * @return Response
-//     */
-    /*public function createPhone(Request $request)
+    /**
+     * @Route ("/phones", name="create_phone", methods={"POST"})
+     * @param Request $request
+     * @return Response
+     */
+    public function createPhone(Request $request)
     {
-
+        /**
+         * @var CreatePhoneFromRequestInput $phoneObject
+         */
         $phoneObject = $this->serializer->deserialize(
             $request->getContent(),
             CreatePhoneFromRequestInput::class,
             'json'
         );
+
+
 
         $errors=$this->validator->validate($phoneObject);
         if($errors->count() > 0 ){
@@ -79,5 +85,5 @@ class PhoneController extends BaseEntityController
         $this->em->persist($phone);
         $this->em->flush();
         return JsonResponder::responder(null, Response::HTTP_CREATED, ['Location' => "phones" . $phone->getId()]);
-    }*/
+    }
 }
