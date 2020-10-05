@@ -44,7 +44,7 @@ class Phone
     /**
      * @var float
      *
-     * @ORM\Column(type="decimal",precision= 6, scale = 2)
+     * @ORM\Column(type="float",precision= 6, scale = 2)
      * @Groups({"list_phone"})
      */
     private $price;
@@ -95,15 +95,15 @@ class Phone
     public function __construct(
         string $brand,
         string $model,
-        int $price,
+        float $price,
         string $system,
-        int $screenSize,
+        float $screenSize,
         int $storage,
         string $color,
         string $description
     )
     {
-        $this->id= Uuid::v4()->__toString();
+        $this->id=Uuid::v4()->__toString();
         $this->brand = $brand;
         $this->model = $model;
         $this->price = $price;
@@ -160,18 +160,69 @@ class Phone
         return $this->description;
     }
 
-    public static function createFromRequest(CreatePhoneFromRequestInput $object)
+    public static function createFromRequest(CreatePhoneFromRequestInput $phoneDTO)
     {
         return new self(
-            $object->brand,
-            $object->model,
-            $object->price,
-            $object->system,
-            $object->screenSize,
-            $object->storage,
-            $object->color,
-            $object->description
+            $phoneDTO->brand,
+            $phoneDTO->model,
+            $phoneDTO->price,
+            $phoneDTO->system,
+            $phoneDTO->screenSize,
+            $phoneDTO->storage,
+            $phoneDTO->color,
+            $phoneDTO->description
 
         );
+    }
+
+    public function updateFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        $this->updateBrandFromRequest($phoneDTO);
+        $this->updateModelFromRequest($phoneDTO);
+        $this->updatePriceFromRequest($phoneDTO);
+        $this->updateSystemFromRequest($phoneDTO);
+        $this->updateScreenSizeFromRequest($phoneDTO);
+        $this->updateStorageFromRequest($phoneDTO);
+        $this->updateColorFromRequest($phoneDTO);
+        $this->updateDescriptionFromRequest($phoneDTO);
+    }
+
+    private function updateBrandFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        return $this->brand=$phoneDTO->brand;
+    }
+
+    private function updateModelFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        return $this->model=$phoneDTO->model;
+    }
+
+    private function updatePriceFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        return $this->price=$phoneDTO->price;
+    }
+
+    private function updateSystemFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        return $this->system=$phoneDTO->system;
+    }
+
+    private function updateScreenSizeFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        return $this->screenSize=$phoneDTO->screenSize;
+    }
+
+    private function updateStorageFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        return $this->storage=$phoneDTO->storage;
+    }
+
+    private function updateColorFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        return $this->color=$phoneDTO->color;
+    }
+    private function updateDescriptionFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    {
+        return $this->description=$phoneDTO->description;
     }
 }
