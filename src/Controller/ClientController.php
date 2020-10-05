@@ -3,8 +3,9 @@
 
 namespace App\Controller;
 
-use App\DTO\Client\CreateClientFromRequestInput;
+use App\DTO\Client\CreateClient\CreateClientFromRequestInput;
 use App\Entity\Client;
+use App\Helper\ViolationBuilder;
 use App\Repository\ClientRepository;
 use App\Responder\JsonResponder;
 use Doctrine\ORM\EntityManagerInterface;
@@ -56,6 +57,8 @@ class ClientController
 
     /**
      * @Route("/clients",name="create_client",methods={"POST"})
+     * @param Request $request
+     * @return Response
      */
     public function createClient(Request $request)
     {
@@ -67,6 +70,12 @@ class ClientController
             CreateClientFromRequestInput::class,
             'json'
         );
+
+        $errors = $this->validator->validate($clientDTO);
+        if ($errors->count() > 0) {
+            $errorList = ViolationBuilder::build($errors);
+            return JsonResponder::responder(json_encode($errorList),Response::HTTP_BAD_REQUEST);
+        }
 
         $client = Client::createClientFromRequest($clientDTO);
 
