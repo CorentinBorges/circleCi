@@ -4,6 +4,7 @@
 namespace App\Entity;
 
 
+use App\DTO\Phone\CreatePhone\CreatePhoneFromRequestInput;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
@@ -152,8 +153,7 @@ class Phone
         return $this->description;
     }
 
-    // todo:delete method if unsused
-    /*public static function createFromRequest(\App\DTO\Phones\CreatePhones\CreatePhoneFromRequestInput $object)
+    public static function createFromRequest(CreatePhoneFromRequestInput $object)
     {
         return new self(
             $object->brand,
@@ -166,5 +166,5 @@ class Phone
             $object->description
 
         );
-    }*/
+    }
 }
