@@ -99,7 +99,7 @@ class PhoneController extends BaseEntityController
          */
         $newPhoneDTO = $this->serializer->deserialize(
             $request->getContent(),
-            UpdatePhoneFromRequestInput::class,
+            CreatePhoneFromRequestInput::class,
             'json'
         );
 
