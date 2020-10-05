@@ -5,6 +5,7 @@ namespace App\Entity;
 
 
 use App\DTO\Phone\CreatePhone\CreatePhoneFromRequestInput;
+use App\DTO\Phone\UpdatePhone\UpdatePhoneFromRequestInput;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;

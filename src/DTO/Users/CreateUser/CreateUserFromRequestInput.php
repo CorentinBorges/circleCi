@@ -7,6 +7,8 @@ namespace App\DTO\Users\CreateUser;
 
 
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints as AcmeAssert;
+
 
 class CreateUserFromRequestInput
 {
@@ -22,7 +24,7 @@ class CreateUserFromRequestInput
 
     /**
      * @var string
-     *
+     * @AcmeAssert\Users\isUniqueUserProperty
      * @Assert\Length (max="50", maxMessage="the full username can't exceed 50 characters")
      * @Assert\Type(type="string", message="Username has to be string type")
      * @Assert\NotBlank(message="You have to enter a userame")
@@ -31,7 +33,7 @@ class CreateUserFromRequestInput
 
     /**
      * @var string
-     *
+     * @AcmeAssert\Users\isUniqueUserProperty
      * @Assert\Email(message="Email not valid")
      * @Assert\Type(type="string", message="email has to be string type")
      * @Assert\NotBlank(message="You have to enter an email")

@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\DTO\Phone\CreatePhone\CreatePhoneFromRequestInput;
+use App\DTO\Phone\UpdatePhone\UpdatePhoneFromRequestInput;
 use App\Entity\Phone;
 use App\Helper\ViolationBuilder;
 use App\Repository\PhoneRepository;
@@ -73,8 +74,6 @@ class PhoneController extends BaseEntityController
             CreatePhoneFromRequestInput::class,
             'json'
         );
-
-
 
         $errors=$this->validator->validate($phoneObject);
         if($errors->count() > 0 ){
