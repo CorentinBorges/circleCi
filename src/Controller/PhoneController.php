@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -85,5 +86,34 @@ class PhoneController extends BaseEntityController
         $this->em->persist($phone);
         $this->em->flush();
         return JsonResponder::responder(null, Response::HTTP_CREATED, ['Location' => "phones" . $phone->getId()]);
+    }
+
+    /**
+     * @Route ("/phones/{id}",name="update_phone",methods={"PUT"})
+     * @param Phone $phone
+     * @param Request $request
+     * @return Response
+     */
+    public function updatePhone(Phone $phone, Request $request)
+    {
+        /**
+         * @var CreatePhoneFromRequestInput $newPhoneDTO
+         */
+        $newPhoneDTO = $this->serializer->deserialize(
+            $request->getContent(),
+            CreatePhoneFromRequestInput::class,
+            'json'
+        );
+
+        $errors = $this->validator->validate($newPhoneDTO);
+        if ($errors->count() > 0) {
+            $listErrors=ViolationBuilder::build($errors);
+            return JsonResponder::responder(json_encode($listErrors), Response::HTTP_BAD_REQUEST);
+        }
+
+        $phone->updateFromRequest($newPhoneDTO);
+        $this->em->flush();
+
+        return JsonResponder::responder(null, Response::HTTP_OK, ['Location' => 'phones' . $phone->getId()]);
     }
 }
