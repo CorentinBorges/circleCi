@@ -57,9 +57,9 @@ class Phone
     private $system;
 
     /**
-     * @var int
+     * @var float
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="float", precision=3, scale=2)
      */
     private $screenSize;
 
