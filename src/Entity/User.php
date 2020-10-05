@@ -5,6 +5,7 @@ namespace App\Entity;
 
 
 use App\DTO\Users\CreateUser\CreateUserFromRequestInput;
+use App\DTO\Users\UpdateUser\UpdateUserFromRequestInput;
 use App\Repository\ClientRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityNotFoundException;
@@ -115,4 +116,27 @@ class User
             $client
         );
     }
+
+    public function updateUserFromRequest(UpdateUserFromRequestInput $userDTO)
+    {
+        $this->username = $userDTO->username;
+        $this->fullName = $userDTO->fullName;
+        $this->email = $userDTO->email;
+    }
+
+    private function updateFullNameFromRequest(UpdateUserFromRequestInput $userDTO)
+    {
+        $this->fullName = $userDTO->fullName;
+    }
+
+    private function updateUsernameFromRequest(UpdateUserFromRequestInput $userDTO)
+    {
+        $this->username = $userDTO->username;
+    }
+
+    private function updateEmailFromRequest(UpdateUserFromRequestInput $userDTO)
+    {
+        $this->email = $userDTO->email;
+    }
+
 }
