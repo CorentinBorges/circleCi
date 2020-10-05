@@ -86,6 +86,12 @@ class PhoneController extends BaseEntityController
         return JsonResponder::responder(null, Response::HTTP_CREATED, ['Location' => "phones" . $phone->getId()]);
     }
 
+    /**
+     * @Route ("/phones/{id}",name="update_phone",methods={"PUT"})
+     * @param Phone $phone
+     * @param Request $request
+     * @return Response
+     */
     public function updatePhone(Phone $phone, Request $request)
     {
         /**
@@ -93,7 +99,7 @@ class PhoneController extends BaseEntityController
          */
         $newPhoneDTO = $this->serializer->deserialize(
             $request->getContent(),
-            CreatePhoneFromRequestInput::class,
+            UpdatePhoneFromRequestInput::class,
             'json'
         );
 

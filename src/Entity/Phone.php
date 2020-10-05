@@ -176,7 +176,7 @@ class Phone
         );
     }
 
-    public function updateFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    public function updateFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
     {
         $this->updateBrandFromRequest($phoneDTO);
         $this->updateModelFromRequest($phoneDTO);
@@ -188,41 +188,41 @@ class Phone
         $this->updateDescriptionFromRequest($phoneDTO);
     }
 
-    private function updateBrandFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    private function updateBrandFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
     {
         return $this->brand=$phoneDTO->brand;
     }
 
-    private function updateModelFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    private function updateModelFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
     {
         return $this->model=$phoneDTO->model;
     }
 
-    private function updatePriceFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    private function updatePriceFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
     {
         return $this->price=$phoneDTO->price;
     }
 
-    private function updateSystemFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    private function updateSystemFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
     {
         return $this->system=$phoneDTO->system;
     }
 
-    private function updateScreenSizeFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    private function updateScreenSizeFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
     {
         return $this->screenSize=$phoneDTO->screenSize;
     }
 
-    private function updateStorageFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    private function updateStorageFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
     {
         return $this->storage=$phoneDTO->storage;
     }
 
-    private function updateColorFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    private function updateColorFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
     {
         return $this->color=$phoneDTO->color;
     }
-    private function updateDescriptionFromRequest(CreatePhoneFromRequestInput $phoneDTO)
+    private function updateDescriptionFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
     {
         return $this->description=$phoneDTO->description;
     }
