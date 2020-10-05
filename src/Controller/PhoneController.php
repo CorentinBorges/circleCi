@@ -113,7 +113,7 @@ class PhoneController extends BaseEntityController
         $phone->updateFromRequest($newPhoneDTO);
         $this->em->flush();
 
-        return JsonResponder::responder(null, Response::HTTP_OK, ['Location' => 'phones' . $phone->getId()]);
+        return JsonResponder::responder(null, Response::HTTP_OK, ['Location' => 'api/phones/' . $phone->getId()]);
     }
 
     /**

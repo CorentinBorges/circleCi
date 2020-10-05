@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\DTO\Users\CreateUser\CreateUserFromRequestInput;
+use App\DTO\Users\UpdateUser\UpdateUserFromRequestInput;
 use App\Entity\User;
 use App\Helper\ViolationBuilder;
 use App\Repository\ClientRepository;
@@ -28,10 +29,12 @@ class UserController Extends BaseEntityController
      * @var ClientRepository
      */
     private $clientRepository;
+
     /**
      * @var UserRepository
      */
     private $userRepository;
+
 
     public function __construct(
         SerializerInterface $serializer,
@@ -41,7 +44,7 @@ class UserController Extends BaseEntityController
         UserRepository $userRepository
     )
     {
-        parent::__construct($serializer,$em,$validator);
+        parent::__construct($serializer, $em, $validator);
         $this->clientRepository = $clientRepository;
         $this->userRepository = $userRepository;
     }
@@ -98,6 +101,38 @@ class UserController Extends BaseEntityController
     }
 
     /**
+     * @Route("/users/{id}",name="update_user",methods={"PUT"})
+     * @param User $user
+     * @param Request $request
+     * @return Response
+     */
+    public function updateUser(User $user,Request $request)
+    {
+        /**
+         * @var CreateUserFromRequestInput $newUser
+         */
+        $newUser = $this->serializer->deserialize(
+            $request->getContent(),
+            UpdateUserFromRequestInput::class,
+            'json'
+        );
+
+        $errors = $this->validator->validate($newUser);
+        if ($errors->count() > 0) {
+            $errorList = ViolationBuilder::build($errors);
+            return JsonResponder::responder(json_encode($errorList), Response::HTTP_BAD_REQUEST);
+        }
+
+        $user->updateUserFromRequest($newUser);
+        $this->em->flush();
+
+        return JsonResponder::responder(null,
+            Response::HTTP_OK,
+            ['Location'=>'/api/users'.$user->getId()]
+        );
+    }
+
+    /**
      * @Route("/users/{id}",name="delete_user",methods={"DELETE"})
      * @param User $user
      * @return Response
@@ -107,7 +142,8 @@ class UserController Extends BaseEntityController
         $this->em->remove($user);
         $this->em->flush();
         return JsonResponder::responder(null);
-
     }
+
+
 
 }
