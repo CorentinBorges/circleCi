@@ -94,7 +94,7 @@ class UserController Extends BaseEntityController
         $this->em->persist($user);
         $this->em->flush();
 
-        return JsonResponder::responder(null, Response::HTTP_CREATED,['Location'=>'api/users/'.$user->getId()]);
+        return JsonResponder::responder(null, Response::HTTP_CREATED,['Location'=>'/api/users/'.$user->getId()]);
     }
 
     /**
@@ -125,7 +125,7 @@ class UserController Extends BaseEntityController
 
         return JsonResponder::responder(null,
             Response::HTTP_OK,
-            ['Location'=>'/api/users'.$user->getId()]
+            ['Location'=>'/api/users/'.$user->getId()]
         );
     }
 

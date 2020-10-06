@@ -1,19 +1,21 @@
 <?php
 
 
-namespace App\DTO\Client\CreateClient;
+namespace App\DTO\Client\UpdateClient;
 
 
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\Constraints as AcmeAssert;
 
-class CreateClientFromRequestInput
+class UpdateClientFromRequestInput
 {
+    public $id;
+
     /**
      * @var string
      * @Assert\NotBlank(message="Client must have a name")
      * @Assert\Type(type="string")
-     * @AcmeAssert\Client\isUniqueClient
+     * @AcmeAssert\Client\isUniqueUpdateClient
      * @Assert\Length(max="64",maxMessage="Name can't exceed 64 characters")
      */
     public $name;
@@ -22,7 +24,7 @@ class CreateClientFromRequestInput
 
     /**
      * @var string
-     * @Assert\NotBlank(message="Client must have a password")
+     * @Assert\NotBlank (message="Client must have a password")
      * @Assert\Type(type="string")
      * @Assert\Length (
      *     max="50",
@@ -43,4 +45,13 @@ class CreateClientFromRequestInput
         $this->roles = ['ROLE_CLIENT'];
     }
 
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
 }

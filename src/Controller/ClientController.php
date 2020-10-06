@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\DTO\Client\CreateClient\CreateClientFromRequestInput;
+use App\DTO\Client\UpdateClient\UpdateClientFromRequestInput;
 use App\Entity\Client;
 use App\Helper\ViolationBuilder;
 use App\Repository\ClientRepository;
@@ -86,11 +87,36 @@ class ClientController
         return JsonResponder::responder(
             null,
             Response::HTTP_CREATED,
-            ['Location'=>'/api/client'.$client->getId()]
+            ['Location'=>'/api/clients/'.$client->getId()]
         );
 
     }
 
-}
+    /**
+     * @Route ("/clients/{id}",name="update_client",methods={"PUT"})
+     * @param Client $client
+     * @param Request $request
+     */
+    public function updateClient(Client $client, Request $request)
+    {
+        $clientDTO = new UpdateClientFromRequestInput();
+        $clientDTO->setId($client->getId());
+        $newClient = $this->serializer->deserialize(
+            $request->getContent(),
+            UpdateClientFromRequestInput::class,
+            'json',
+            [AbstractNormalizer::IGNORED_ATTRIBUTES=>['roles','id','password'],
+            AbstractNormalizer::OBJECT_TO_POPULATE=>$clientDTO]);
 
-//todo: verify response location
+        $errors = $this->validator->validate($newClient);
+        if ($errors->count() > 0) {
+            $errorsList=ViolationBuilder::build($errors);
+            return JsonResponder::responder(json_encode($errorsList), Response::HTTP_BAD_REQUEST);
+        }
+
+        $client->updateClientFromRequest($clientDTO);
+        $this->entityManager->flush();
+
+        return JsonResponder::responder(null);
+    }
+}
