@@ -142,4 +142,16 @@ class ClientController
         $clientDetails = $this->serializer->serialize($client, 'json',['groups'=>'details']);
         return JsonResponder::responder($clientDetails);
     }
+
+    /**
+     * @Route("/clients/{id}",name="delete_client",methods={"DELETE"})
+     * @param Client $client
+     * @return Response
+     */
+    public function clientDelete(Client $client)
+    {
+        $this->entityManager->remove($client);
+        $this->entityManager->flush();
+        return JsonResponder::responder(null);
+    }
 }
