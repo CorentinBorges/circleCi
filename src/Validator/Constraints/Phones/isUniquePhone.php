@@ -6,11 +6,11 @@ namespace App\Validator\Constraints\Phones;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Class isUniquePhoneProperty
+ * Class isUniquePhone
  * @package App\Validator\Constraints
  * @Annotation
  */
-class isUniquePhoneProperty extends Constraint
+class isUniquePhone extends Constraint
 {
     public $message = 'The {{ property }} "{{ value }}" already exist';
 

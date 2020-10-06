@@ -4,39 +4,35 @@
 namespace App\Validator\Constraints\Phones;
 
 
-use App\DTO\Phone\UpdatePhone\UpdatePhoneFromRequestInput;
 use App\Repository\PhoneRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class isUniqueUpdatePhoneValidator extends ConstraintValidator
+class isUniquePhoneValidator extends ConstraintValidator
 {
     /**
      * @var PhoneRepository
      */
-    private $phoneRepository;
+    private $PhoneRepository;
 
-    public function __construct(PhoneRepository $phoneRepository)
+    public function __construct(PhoneRepository $PhoneRepository)
     {
-        $this->phoneRepository = $phoneRepository;
+        $this->PhoneRepository = $PhoneRepository;
     }
     public function validate($value, Constraint $constraint)
     {
         $property=$this->context->getPropertyName();
-        /**
-         * @var UpdatePhoneFromRequestInput $object
-         */
         $object = $this->context->getObject();
-        if ($phoneInDb=$this->phoneRepository->findOneBy([$property=>$value])) {
-            if ($phoneInDb->getId()!==$object->getId()) {
+        if ($userInDb=$this->PhoneRepository->findOneBy([$property=>$value])) {
+            if ((method_exists($object,'getId') && $object->getId()!==$userInDb->getId()) ||
+                !method_exists($object,'getId')) {
                 $this->context->buildViolation($constraint->message)
                     ->setParameter('{{ property }}', $property )
                     ->setParameter('{{ value }}', $value)
                     ->addViolation();
             }
-
         }
-
     }
 
 }

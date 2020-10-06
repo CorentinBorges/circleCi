@@ -15,6 +15,8 @@ class isUniqueUserValidator extends ConstraintValidator
      */
     private $UserRepository;
 
+    private $testRepo;
+
     public function __construct(UserRepository $UserRepository)
     {
         $this->UserRepository = $UserRepository;
@@ -32,7 +34,6 @@ class isUniqueUserValidator extends ConstraintValidator
                     ->addViolation();
             }
         }
-
     }
 
 }
