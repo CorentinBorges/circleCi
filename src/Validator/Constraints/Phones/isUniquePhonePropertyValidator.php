@@ -10,8 +10,6 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class isUniquePhonePropertyValidator extends ConstraintValidator
 {
-    //todo: delete if unused
-
     /**
      * @var PhoneRepository
      */

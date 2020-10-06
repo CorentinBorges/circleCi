@@ -95,22 +95,21 @@ class PhoneController extends BaseEntityController
      */
     public function updatePhone(Phone $phone, Request $request)
     {
-        /**
-         * @var UpdatePhoneFromRequestInput $newPhoneDTO
-         */
-        $newPhoneDTO = $this->serializer->deserialize(
+        $phoneDTO = new UpdatePhoneFromRequestInput();
+        $phoneDTO->setId($phone->getId());
+        $newPhone = $this->serializer->deserialize(
             $request->getContent(),
             UpdatePhoneFromRequestInput::class,
-            'json'
+            'json',[AbstractNormalizer::OBJECT_TO_POPULATE=>$phoneDTO]
         );
 
-        $errors = $this->validator->validate($newPhoneDTO);
+        $errors = $this->validator->validate($newPhone);
         if ($errors->count() > 0) {
             $listErrors=ViolationBuilder::build($errors);
             return JsonResponder::responder(json_encode($listErrors), Response::HTTP_BAD_REQUEST);
         }
 
-        $phone->updateFromRequest($newPhoneDTO);
+        $phone->updateFromRequest($phoneDTO);
         $this->em->flush();
 
         return JsonResponder::responder(null, Response::HTTP_OK, ['Location' => '/api/phones/' . $phone->getId()]);
