@@ -9,6 +9,7 @@ use App\Entity\Client;
 use App\Helper\ViolationBuilder;
 use App\Repository\ClientRepository;
 use App\Responder\JsonResponder;
+use Couchbase\RegexpSearchQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -118,5 +119,16 @@ class ClientController
         $this->entityManager->flush();
 
         return JsonResponder::responder(null);
+    }
+
+    /**
+     * @Route("/clients",name="client_list",methods={"GET"})
+     * @param Request $request
+     */
+    public function clientList(Request $request)
+    {
+        $all = $this->clientRepository->findAll();
+        $list = $this->serializer->serialize($all, 'json',['groups'=>'list_all']);
+        return JsonResponder::responder($list,Response::HTTP_OK);
     }
 }
