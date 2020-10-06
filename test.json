@@ -1,9 +1,9 @@
-//{
-//  "fullName": "Joe Ni",
-//  "userName": "Jojo",
-//  "email": "joelaterreu@gmail.com",
-//  "clientName": "JhonClient"
-//}
+{
+  "fullName": "Joe Ni",
+  "userName": "Jojo",
+  "email": "joelaterreu@gmail.com",
+  "clientName": "JhonClient"
+}
 
 //{
 //  "name": "cocoTest",
@@ -12,13 +12,13 @@
 //  "pass": "Coco1309"
 //}
 
-{
-  "brand": "Huawei",
-  "price": 120,
-  "system": "android",
-  "screenSize": 2.2,
-  "storage": 8,
-  "color": "blue",
-  "description": "Un super fantastic portable",
-  "model": "P9"
-}
+//{
+//  "brand": "Huawei",
+//  "price": 120,
+//  "system": "android",
+//  "screenSize": 2.2,
+//  "storage": 8,
+//  "color": "blue",
+//  "description": "Un super fantastic portable",
+//  "model": "P9"
+//}

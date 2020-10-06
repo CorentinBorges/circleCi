@@ -6,11 +6,11 @@ namespace App\Validator\Constraints\Users;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Class isUniqueUserProperty
+ * Class isUniqueUser
  * @package App\Validator\Constraints
  * @Annotation
  */
-class isUniqueUserProperty extends Constraint
+class isUniqueUser extends Constraint
 {
     public $message = 'The {{ property }} "{{ value }}" already exist';
 

@@ -105,13 +105,12 @@ class UserController Extends BaseEntityController
      */
     public function updateUser(User $user,Request $request)
     {
-        /**
-         * @var CreateUserFromRequestInput $newUser
-         */
+        $userDTO = new UpdateUserFromRequestInput();
+        $userDTO->setId($user->getId());
         $newUser = $this->serializer->deserialize(
             $request->getContent(),
             UpdateUserFromRequestInput::class,
-            'json'
+            'json',[AbstractNormalizer::OBJECT_TO_POPULATE=>$userDTO]
         );
 
         $errors = $this->validator->validate($newUser);
@@ -120,7 +119,7 @@ class UserController Extends BaseEntityController
             return JsonResponder::responder(json_encode($errorList), Response::HTTP_BAD_REQUEST);
         }
 
-        $user->updateUserFromRequest($newUser);
+        $user->updateUserFromRequest($userDTO);
         $this->em->flush();
 
         return JsonResponder::responder(null,
