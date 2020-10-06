@@ -178,60 +178,13 @@ class Phone
 
     public function updateFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
     {
-        $this->brand=$phoneDTO->brand;
-        $this->model=$phoneDTO->model;
-        $this->price=$phoneDTO->price;
-        $this->system=$phoneDTO->system;
-        $this->storage=$phoneDTO->storage;
-        $this->screenSize=$phoneDTO->screenSize;
-        $this->color=$phoneDTO->color;
-        $this->description=$phoneDTO->description;
-//        $this->updateBrandFromRequest($phoneDTO);
-//        $this->updateModelFromRequest($phoneDTO);
-//        $this->updatePriceFromRequest($phoneDTO);
-//        $this->updateSystemFromRequest($phoneDTO);
-//        $this->updateScreenSizeFromRequest($phoneDTO);
-//        $this->updateStorageFromRequest($phoneDTO);
-//        $this->updateColorFromRequest($phoneDTO);
-//        $this->updateDescriptionFromRequest($phoneDTO);
+        $this->brand = $phoneDTO->brand;
+        $this->model = $phoneDTO->model;
+        $this->price = $phoneDTO->price;
+        $this->system = $phoneDTO->system;
+        $this->storage = $phoneDTO->storage;
+        $this->screenSize = $phoneDTO->screenSize;
+        $this->color = $phoneDTO->color;
+        $this->description = $phoneDTO->description;
     }
-
-//    private function updateBrandFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
-//    {
-//        return
-//    }
-//
-//    private function updateModelFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
-//    {
-//        return
-//    }
-//
-//    private function updatePriceFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
-//    {
-//        return
-//    }
-//
-//    private function updateSystemFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
-//    {
-//        return
-//    }
-//
-//    private function updateScreenSizeFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
-//    {
-//        return
-//    }
-//
-//    private function updateStorageFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
-//    {
-//        return
-//    }
-//
-//    private function updateColorFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
-//    {
-//        return
-//    }
-//    private function updateDescriptionFromRequest(UpdatePhoneFromRequestInput $phoneDTO)
-//    {
-//        return
-//    }
 }
