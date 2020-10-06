@@ -123,12 +123,23 @@ class ClientController
 
     /**
      * @Route("/clients",name="client_list",methods={"GET"})
-     * @param Request $request
+     * @return Response
      */
-    public function clientList(Request $request)
+    public function clientList()
     {
         $all = $this->clientRepository->findAll();
         $list = $this->serializer->serialize($all, 'json',['groups'=>'list_all']);
-        return JsonResponder::responder($list,Response::HTTP_OK);
+        return JsonResponder::responder($list);
+    }
+
+    /**
+     * @Route("/clients/{id}",name="client_details", methods={"GET"})
+     * @param Client $client
+     * @return Response
+     */
+    public function clientDetails(Client $client)
+    {
+        $clientDetails = $this->serializer->serialize($client, 'json',['groups'=>'details']);
+        return JsonResponder::responder($clientDetails);
     }
 }

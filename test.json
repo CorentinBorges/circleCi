@@ -6,9 +6,8 @@
 //}
 
 {
-  "name": "coco",
-  "password": "password test",
-  "roles": {
-    "0":"ROLE_CLIENT"
-  }
+  "name": "cocoTest",
+  "phoneNumber": "33612",
+  "mail": "monMail@gmail.com",
+  "pass": "Coco1309"
 }
