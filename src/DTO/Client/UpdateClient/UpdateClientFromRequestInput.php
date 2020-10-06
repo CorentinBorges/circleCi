@@ -4,12 +4,14 @@
 namespace App\DTO\Client\UpdateClient;
 
 
+use App\DTO\Client\ClientFromRequestInput;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\Constraints as AcmeAssert;
 
-class UpdateClientFromRequestInput
+class UpdateClientFromRequestInput extends ClientFromRequestInput
 {
     public $id;
+
 
     /**
      * @var string
@@ -20,30 +22,23 @@ class UpdateClientFromRequestInput
      */
     public $name;
 
-    public $roles;
+    /**
+     * @var string
+     * @AcmeAssert\Client\isUniqueUpdateClient
+     * @Assert\NotBlank(message="Client must have a mail")
+     * @Assert\Email(message="mail not valid")
+     */
+    public $mail;
 
     /**
      * @var string
-     * @Assert\NotBlank (message="Client must have a password")
-     * @Assert\Type(type="string")
-     * @Assert\Length (
-     *     max="50",
-     *     maxMessage="password can't exceed 50 words",
-     *     min="8",
-     *     minMessage="password must contain at least 8 characters")
-     * @Assert\Regex(
-     *     pattern="#^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).+#",
-     *     message="Password must have at least one Uppercase, one lowercase and one number")
+     * @AcmeAssert\Client\isUniqueUpdateClient
+     * @Assert\NotBlank(message="Client must have a phoneNumber")
+     * @Assert\Type(type="string", message="Phone number has to be string type")
+     * @Assert\Regex (pattern="#[0-9]+#")
      */
-    public $pass;
+    public $phoneNumber;
 
-    public $password;
-
-    public function __construct()
-    {
-        $this->password = password_hash($this->pass, PASSWORD_BCRYPT, ['cost' => 8]);
-        $this->roles = ['ROLE_CLIENT'];
-    }
 
     public function setId($id)
     {

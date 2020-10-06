@@ -123,20 +123,4 @@ class User
         $this->fullName = $userDTO->fullName;
         $this->email = $userDTO->email;
     }
-
-    private function updateFullNameFromRequest(UpdateUserFromRequestInput $userDTO)
-    {
-        $this->fullName = $userDTO->fullName;
-    }
-
-    private function updateUsernameFromRequest(UpdateUserFromRequestInput $userDTO)
-    {
-        $this->username = $userDTO->username;
-    }
-
-    private function updateEmailFromRequest(UpdateUserFromRequestInput $userDTO)
-    {
-        $this->email = $userDTO->email;
-    }
-
 }

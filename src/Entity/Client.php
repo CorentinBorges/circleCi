@@ -19,14 +19,6 @@ use Symfony\Component\Uid\Uuid;
  * @package App\Entity
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
- * @UniqueEntity(
- *     fields={"email"},
- *     message="A user is already logs with this email",
- * )
- * @UniqueEntity(
- *     fields={"username"},
- *     message="This username already exist"
- * )
  */
 class Client
 {
@@ -41,9 +33,34 @@ class Client
      * @var string
      *
      * @ORM\Column(type="string", length=64)
-     * @Groups({"list_all"})
+     * @Groups({"list_all", "details"})
      */
     private $name;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=50)
+     * @Groups({"list_all", "details"})
+     */
+    private $mail;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     * @Groups({"details"})
+     */
+    private $phoneNumber;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="integer")
+     * @Groups({"details"})
+     */
+    private $createdAt;
 
     /**
      * @ORM\Column(type="json")
@@ -58,13 +75,17 @@ class Client
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="client")
+     * @Groups({"details"})
      */
     private $users;
 
-    public function __construct(string $name, string $password, array $roles)
+    public function __construct(string $name,string $mail,string $phoneNumber, string $password, array $roles)
     {
         $this->id = Uuid::v4()->__toString();
+        $this->createdAt=time();
         $this->name = $name;
+        $this->mail=$mail;
+        $this->phoneNumber=$phoneNumber;
         $this->password=$password;
         $this->roles = $roles;
 
@@ -94,6 +115,21 @@ class Client
         return $this->users;
     }
 
+    public function getMail(): string
+    {
+        return $this->mail;
+    }
+
+    public function getPhoneNumber(): string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function getCreatedAt(): int
+    {
+        return $this->createdAt;
+    }
+
     public function getRoles():array
     {
         $roles = $this->roles;
@@ -106,6 +142,8 @@ class Client
     {
         return new self(
             $clientDTO->name,
+            $clientDTO->mail,
+            $clientDTO->phoneNumber,
             $clientDTO->password,
             $clientDTO->roles
         );
@@ -114,6 +152,8 @@ class Client
     public function updateClientFromRequest(UpdateClientFromRequestInput $clientDTO)
     {
         $this->name = $clientDTO->name;
+        $this->phoneNumber=$clientDTO->phoneNumber;
+        $this->mail = $clientDTO->mail;
         $this->password=$clientDTO->password;
         $this->roles = $clientDTO->roles;
     }
