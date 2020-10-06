@@ -6,6 +6,7 @@ namespace App\Entity;
 
 
 use App\DTO\Client\CreateClient\CreateClientFromRequestInput;
+use App\DTO\Client\UpdateClient\UpdateClientFromRequestInput;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -107,5 +108,12 @@ class Client
             $clientDTO->roles
         );
     }
-    
+
+    public function updateClientFromRequest(UpdateClientFromRequestInput $clientDTO)
+    {
+        $this->name = $clientDTO->name;
+        $this->password=$clientDTO->password;
+        $this->roles = $clientDTO->roles;
+    }
+
 }
