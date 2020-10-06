@@ -4,6 +4,8 @@
 namespace App\Entity;
 
 
+
+use App\DTO\Client\CreateClient\CreateClientFromRequestInput;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -56,14 +58,15 @@ class Client
      */
     private $users;
 
-    public function __construct(string $name, string $password, ArrayCollection $users)
+    public function __construct(string $name, string $password, array $roles)
     {
         $this->id = Uuid::v4()->__toString();
         $this->name = $name;
         $this->password=$password;
-        $this->users = $users;
+        $this->roles = $roles;
 
     }
+
     
     public function getId(): string
     {
@@ -94,6 +97,15 @@ class Client
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
+    }
+
+    public static function createClientFromRequest(CreateClientFromRequestInput $clientDTO)
+    {
+        return new self(
+            $clientDTO->name,
+            $clientDTO->password,
+            $clientDTO->roles
+        );
     }
     
 }

@@ -1,6 +1,14 @@
+//{
+//  "fullName": "Joe Ni",
+//  "userName": "Jojo",
+//  "email": "joelaterreu@gmail.com",
+//  "clientName": "JhonClient"
+//}
+
 {
-  "fullName": "Joe Ni",
-  "userName": "Jojo",
-  "email": "joelaterreu@gmail.com",
-  "clientName": "JhonClient"
+  "name": "coco",
+  "password": "password test",
+  "roles": {
+    "0":"ROLE_CLIENT"
+  }
 }
