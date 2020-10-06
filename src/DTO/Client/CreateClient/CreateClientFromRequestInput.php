@@ -5,6 +5,7 @@ namespace App\DTO\Client\CreateClient;
 
 
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\Constraints\Client as AcmeAssert;
 
 class CreateClientFromRequestInput
 {
@@ -29,23 +30,16 @@ class CreateClientFromRequestInput
      *     minMessage="password must contain at least 8 characters")
      *
      * @Assert\Regex(
-     *     pattern="#[A-Z]+#",
-     *     message="Password must have at least one Uppercase"
-     * )
-     * @Assert\Regex(
-     *     pattern="/\b[0-9]+\b/",
-     *     message="Password must have at least one number"
-     * )
-     *
-     * @Assert\Regex(
-     *     pattern="/\b[a-z]+\b/",
-     *     message="Password must have at least one lowercase"
-     * )
+     *     pattern="#^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).+#",
+     *     message="Password must have at least one Uppercase, one lowercase and one number")
      */
+    public $pass;
+
     public $password;
 
     public function __construct()
     {
+        $this->password = password_hash($this->pass, PASSWORD_BCRYPT, ['cost' => 8]);
         $this->roles = ['ROLE_CLIENT'];
     }
 
