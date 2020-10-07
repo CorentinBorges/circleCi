@@ -15,4 +15,9 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($managerRegistry, User::class);
     }
 
+    public function findUserOfOneClient(string $clientId)
+    {
+
+    }
+
 }

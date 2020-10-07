@@ -48,11 +48,13 @@ class UserController Extends BaseEntityController
     }
 
     /**
-     * @Route("/users",name="show_users",methods={"GET"})
+     * @Route("/clients/{id}/users",name="show_users",methods={"GET"})
+     * @param Client $client
+     * @return Response
      */
-    public function usersList()
+    public function usersListForOneClient(Client $client)
     {
-        $usersList = $this->userRepository->findAll();
+        $usersList = $this->userRepository->findBy(['client' => $client]);
         $listJson = $this->serializer->serialize($usersList, 'json',['groups'=>'list_users']);
         return JsonResponder::responder($listJson);
     }
