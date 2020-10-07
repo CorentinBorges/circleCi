@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\DTO\Users;
+namespace App\DTO\User;
 
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -21,7 +21,7 @@ abstract class UserFromRequestInput
 
     /**
      * @var string
-     * @AcmeAssert\Users\isUniqueUser
+     * @AcmeAssert\isUnique()
      * @Assert\Length (max="50", maxMessage="the full username can't exceed 50 characters")
      * @Assert\Type(type="string", message="Username has to be string type")
      * @Assert\NotBlank(message="You have to enter a userame")
@@ -30,7 +30,7 @@ abstract class UserFromRequestInput
 
     /**
      * @var string
-     * @AcmeAssert\Users\isUniqueUser
+     * @AcmeAssert\isUnique()
      * @Assert\Email(message="Email not valid")
      * @Assert\Type(type="string", message="email has to be string type")
      * @Assert\NotBlank(message="You have to enter an email")

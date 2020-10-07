@@ -4,8 +4,8 @@
 namespace App\Entity;
 
 
-use App\DTO\Users\CreateUser\CreateUserFromRequestInput;
-use App\DTO\Users\UpdateUser\UpdateUserFromRequestInput;
+use App\DTO\User\CreateUser\CreateUserFromRequestInput;
+use App\DTO\User\UpdateUser\UpdateUserFromRequestInput;
 use App\Repository\ClientRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityNotFoundException;

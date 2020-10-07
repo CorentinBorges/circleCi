@@ -1,21 +1,22 @@
 <?php
 
 
-namespace App\Validator\Constraints\Phones;
+namespace App\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Class isUniquePhone
+ * Class isUnique
  * @package App\Validator\Constraints
  * @Annotation
  */
-class isUniquePhone extends Constraint
+class isUnique extends Constraint
 {
     public $message = 'The {{ property }} "{{ value }}" already exist';
 
     public function validatedBy()
     {
         return get_class($this) . 'Validator';
-   }
+    }
+
 }

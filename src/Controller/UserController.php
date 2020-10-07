@@ -4,8 +4,8 @@
 namespace App\Controller;
 
 
-use App\DTO\Users\CreateUser\CreateUserFromRequestInput;
-use App\DTO\Users\UpdateUser\UpdateUserFromRequestInput;
+use App\DTO\User\CreateUser\CreateUserFromRequestInput;
+use App\DTO\User\UpdateUser\UpdateUserFromRequestInput;
 use App\Entity\User;
 use App\Helper\ViolationBuilder;
 use App\Repository\ClientRepository;

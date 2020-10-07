@@ -13,7 +13,7 @@ abstract class ClientFromRequestInput
     /**
      * @var string
      * @Assert\NotNull()
-     * @AcmeAssert\Client\isUniqueClient
+     * @AcmeAssert\isUnique()
      * @Assert\NotBlank(message="Client must have a name")
      * @Assert\Type(type="string", message="Name has to be string type")
      * @Assert\Length(max="64",maxMessage="Name can't exceed 64 characters")
@@ -22,7 +22,7 @@ abstract class ClientFromRequestInput
 
     /**
      * @var string
-     * @AcmeAssert\Client\isUniqueClient
+     * @AcmeAssert\isUnique()
      * @Assert\NotNull()
      * @Assert\Email(message="mail not valid")
      * @Assert\NotBlank(message="Client must have a mail")
@@ -31,11 +31,11 @@ abstract class ClientFromRequestInput
 
     /**
      * @var string
-     * @AcmeAssert\Client\isUniqueClient
+     * @AcmeAssert\isUnique()
      * @Assert\NotNull()
      * @Assert\Type(type="string", message="Phone number has to be string type")
      * @Assert\NotBlank(message="Client must have a phoneNumber")
-     * @Assert\Regex (pattern="[^0-9]", message="Phone number can just have...numbers!")
+     * @Assert\Regex (pattern="#[0-9]#", message="Phone number can just have...numbers!")
      */
     public $phoneNumber;
 

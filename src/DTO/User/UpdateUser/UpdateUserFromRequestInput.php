@@ -1,10 +1,10 @@
 <?php
 
 
-namespace App\DTO\Users\UpdateUser;
+namespace App\DTO\User\UpdateUser;
 
 
-use App\DTO\Users\UserFromRequestInput;
+use App\DTO\User\UserFromRequestInput;
 
 
 class UpdateUserFromRequestInput extends UserFromRequestInput

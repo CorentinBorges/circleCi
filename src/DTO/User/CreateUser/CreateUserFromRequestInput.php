@@ -1,12 +1,12 @@
 <?php
 
 
-namespace App\DTO\Users\CreateUser;
+namespace App\DTO\User\CreateUser;
 
 
 
 
-use App\DTO\Users\UserFromRequestInput;
+use App\DTO\User\UserFromRequestInput;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
