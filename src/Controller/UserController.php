@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\DTO\User\CreateUser\CreateUserFromRequestInput;
 use App\DTO\User\UpdateUser\UpdateUserFromRequestInput;
+use App\Entity\Client;
 use App\Entity\User;
 use App\Helper\ViolationBuilder;
 use App\Repository\ClientRepository;
@@ -68,22 +69,24 @@ class UserController Extends BaseEntityController
     }
 
     /**
-     * @Route ("/users",name="create_user", methods={"POST"})
+     * @Route ("/clients/{id}/users",name="create_user", methods={"POST"})
+     * @param Client $client
      * @param Request $request
      * @return Response
-     * @throws EntityNotFoundException
      */
-    public function createUser(Request $request)
+    public function createUser(Client $client,Request $request)
     {
+        $userDTO = new CreateUserFromRequestInput();
+        $userDTO->setClientId($client->getId());
         /**
          * @var CreateUserFromRequestInput $userObject
          */
         $userObject=$this->serializer->deserialize(
             $request->getContent(),
             CreateUserFromRequestInput::class,
-            'json');
+            'json',[AbstractNormalizer::OBJECT_TO_POPULATE=>$userDTO]);
 
-        $errors = $this->validator->validate($userObject);
+        $errors = $this->validator->validate($userDTO);
 
         if ($errors->count() > 0) {
             $listErrors = ViolationBuilder::build($errors);
@@ -103,7 +106,7 @@ class UserController Extends BaseEntityController
      * @param Request $request
      * @return Response
      */
-    public function updateUser(Client $client,User $user,Request $request)
+    public function updateUser(User $user,Request $request)
     {
         $userDTO = new UpdateUserFromRequestInput();
         $userDTO->setId($user->getId());

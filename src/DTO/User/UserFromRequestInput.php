@@ -37,13 +37,5 @@ abstract class UserFromRequestInput
      */
     public $email;
 
-    /**
-     * @var string
-     *
-     * @Assert\Length (max=64, maxMessage="The client name can't exceed 64 characters")
-     * @Assert\Type(type="string", message="Client name has to be string type")
-     * @Assert\NotBlank(message="You have to enter a client Name")
-     */
-    public $clientName;
 
 }
