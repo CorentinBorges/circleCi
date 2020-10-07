@@ -32,6 +32,7 @@ class User
      * @var string
      *
      * @ORM\Column(type="string", length=64)
+     * @Groups({"user_details"})
      */
     private $fullName;
 
@@ -39,7 +40,7 @@ class User
      * @var string
      *
      * @ORM\Column(type="string", length=50)
-     * @Groups({"list_users"})
+     * @Groups({"list_users","user_details"})
      */
     private $username;
 
@@ -47,7 +48,7 @@ class User
      * @var string
      *
      * @ORM\Column(type="string")
-     * @Groups({"list_users"})
+     * @Groups({"list_users","user_details"})
      */
     private $email;
 
@@ -58,6 +59,13 @@ class User
      */
     private $client;
 
+    /**
+     * @var array
+     *
+     * @ORM\Column(type="array")
+     */
+    private $roles;
+
     public function __construct(string $fullName, string $username, string $email, Client $client)
     {
         $this->id = Uuid::v4()->__toString();
@@ -65,6 +73,12 @@ class User
         $this->username = $username;
         $this->email = $email;
         $this->client = $client;
+        $this->roles = ['USER_ROLE'];
+    }
+
+    public function getRoles(): array
+    {
+        return $this->roles;
     }
 
     public function getId(): string
@@ -88,33 +102,35 @@ class User
     }
 
     //todo: Client can search just his own users without clientName
-    public function getClientName()
-    {
-        return $this->getClient()->getName();
-    }
 
     public function getClient(): Client
     {
         return $this->client;
     }
 
-    public static function createUserFromRequest(CreateUserFromRequestInput $requestInput, ClientRepository $clientRepository)
+    public static function createUserFromRequest(CreateUserFromRequestInput $userDTO, ClientRepository $clientRepository)
     {
-        if (! $clientRepository->findOneBy(['name' => $requestInput->clientName])){
+        $client=User::setClientWithId($userDTO->getClientId(), $clientRepository);
+        return new self(
+            $userDTO->fullName,
+            $userDTO->username,
+            $userDTO->email,
+            $client
+        );
+    }
+
+    public static function setClientWithId(string $clientId, ClientRepository $clientRepository)
+    {
+        if (! $clientRepository->findOneBy(['id' => $clientId])){
             throw new EntityNotFoundException(
-                'Client with the name: ' . $requestInput->clientName . ' not found'
+                'Client with the id: ' . $clientId . ' not found'
             );
         }
         /**
          * @var Client $client
          */
-        $client = $clientRepository->findOneBy(['name' => $requestInput->clientName]);
-        return new self(
-            $requestInput->fullName,
-            $requestInput->username,
-            $requestInput->email,
-            $client
-        );
+        $client=$clientRepository->findOneBy(['id' => $clientId]);
+        return $client;
     }
 
     public function updateUserFromRequest(UpdateUserFromRequestInput $userDTO)

@@ -63,7 +63,9 @@ class Client
     private $createdAt;
 
     /**
-     * @ORM\Column(type="json")
+     * @var array
+     *
+     * @ORM\Column(type="array")
      */
     private $roles;
 
@@ -133,8 +135,6 @@ class Client
     public function getRoles():array
     {
         $roles = $this->roles;
-        $roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
 
