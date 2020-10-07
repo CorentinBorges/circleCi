@@ -6,6 +6,7 @@ namespace App\Validator\Authorizer;
 
 use App\Entity\Client;
 use App\Entity\User;
+use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
 use Exception;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
@@ -15,21 +16,11 @@ class ClientAuthorizer
 {
 
     /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    public function __construct(UserRepository $userRepository)
-    {
-        $this->userRepository = $userRepository;
-    }
-
-    /**
      * @param Client $client
      * @param User $user
-     * @param string $path
+     * @param UserRepository $userRepository
      */
-    public static function verifyIsUsersClient(Client $client, User $user)
+    public static function verifyIsUsersClient(Client $client, User $user, UserRepository $userRepository)
     {
         if ($user->getClient()->getId() !== $client->getId()) {
 

@@ -71,7 +71,7 @@ class UserController Extends BaseEntityController
          * @var User $user
          */
         $user = $this->userRepository->findOneBy(['id' => $userId]);
-        ClientAuthorizer::verifyIsUsersClient($client,$user);
+        ClientAuthorizer::verifyIsUsersClient($client,$user,$this->userRepository);
         $userJson = $this->serializer->serialize(
             $user,
             'json',
@@ -128,7 +128,7 @@ class UserController Extends BaseEntityController
          * @var User $user
          */
         $user = $this->userRepository->findOneBy(['id' => $userId]);
-        ClientAuthorizer::verifyIsUsersClient($client,$user);
+        ClientAuthorizer::verifyIsUsersClient($client,$user,$this->userRepository);
         $userDTO = new UpdateUserFromRequestInput();
         $userDTO->setId($user->getId());
         $newUser = $this->serializer->deserialize(
@@ -153,12 +153,18 @@ class UserController Extends BaseEntityController
     }
 
     /**
-     * @Route("/users/{id}",name="delete_user",methods={"DELETE"})
-     * @param User $user
+     * @Route("/clients/{id}/users/{userId}",name="delete_user",methods={"DELETE"})
+     * @param Client $client
+     * @param string $userId
      * @return Response
      */
-    public function deleteUser(User $user)
+    public function deleteUser(Client $client,string $userId)
     {
+        /**
+         * @var User $user
+         */
+        $user = $this->userRepository->findOneBy(['id' => $userId]);
+        ClientAuthorizer::verifyIsUsersClient($client,$user,$this->userRepository);
         $this->em->remove($user);
         $this->em->flush();
         return JsonResponder::responder(null,Response::HTTP_NO_CONTENT);
