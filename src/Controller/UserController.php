@@ -12,8 +12,10 @@ use App\Helper\ViolationBuilder;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
 use App\Responder\JsonResponder;
+use App\Validator\Authorizer\ClientAuthorizer;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -60,13 +62,30 @@ class UserController Extends BaseEntityController
     }
 
     /**
-     * @Route("/users/{id}",name="show_user_details",methods={"GET"})
-     * @param User $user
+     * @Route("/clients/{id}/users/{userId}",name="show_user_details",methods={"GET"})
+     * @param Client $client
+     * @param string $userId
+     * @param ClientAuthorizer $clientAuthorizer
      * @return Response
+     * @throws Exception
      */
-    public function userDetails(User $user)
+    public function userDetails(Client $client, string $userId, ClientAuthorizer $clientAuthorizer)
     {
-        $userJson = $this->serializer->serialize($user, 'json',[AbstractNormalizer::IGNORED_ATTRIBUTES=>['client']]);
+        /**
+         * @var User $user
+         */
+        $user = $this->userRepository->findOneBy(['id' => $userId]);
+        if (!$clientAuthorizer->isUserOfClient($client,$user)) {
+            throw new Exception(json_encode("Access denied for those information, this client is not yours"));
+        }
+        $userJson = $this->serializer->serialize(
+            $user,
+            'json',
+            [
+                'groups'=>'user_details',
+                AbstractNormalizer::IGNORED_ATTRIBUTES=>['client'],
+            ]
+        );
         return JsonResponder::responder($userJson);
     }
 

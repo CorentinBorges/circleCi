@@ -32,6 +32,7 @@ class User
      * @var string
      *
      * @ORM\Column(type="string", length=64)
+     * @Groups({"user_details"})
      */
     private $fullName;
 
@@ -39,7 +40,7 @@ class User
      * @var string
      *
      * @ORM\Column(type="string", length=50)
-     * @Groups({"list_users"})
+     * @Groups({"list_users","user_details"})
      */
     private $username;
 
@@ -47,7 +48,7 @@ class User
      * @var string
      *
      * @ORM\Column(type="string")
-     * @Groups({"list_users"})
+     * @Groups({"list_users","user_details"})
      */
     private $email;
 
