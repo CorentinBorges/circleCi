@@ -112,7 +112,7 @@ class PhoneController extends BaseEntityController
         $phone->updateFromRequest($phoneDTO);
         $this->em->flush();
 
-        return JsonResponder::responder(null, Response::HTTP_OK, ['Location' => '/api/phones/' . $phone->getId()]);
+        return JsonResponder::responder(null, Response::HTTP_NO_CONTENT, ['Location' => '/api/phones/' . $phone->getId()]);
     }
 
     /**
@@ -124,6 +124,6 @@ class PhoneController extends BaseEntityController
     {
         $this->em->remove($phone);
         $this->em->flush();
-        return JsonResponder::responder(null);
+        return JsonResponder::responder(null,Response::HTTP_NO_CONTENT);
     }
 }

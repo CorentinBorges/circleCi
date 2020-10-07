@@ -23,7 +23,11 @@ abstract class BaseEntityController
      */
     protected $validator;
 
-    public function __construct(SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator)
+    public function __construct(
+        SerializerInterface $serializer,
+        EntityManagerInterface $em,
+        ValidatorInterface $validator
+    )
     {
         $this->serializer = $serializer;
         $this->em = $em;

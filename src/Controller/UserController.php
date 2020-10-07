@@ -103,7 +103,7 @@ class UserController Extends BaseEntityController
      * @param Request $request
      * @return Response
      */
-    public function updateUser(User $user,Request $request)
+    public function updateUser(Client $client,User $user,Request $request)
     {
         $userDTO = new UpdateUserFromRequestInput();
         $userDTO->setId($user->getId());
@@ -123,7 +123,7 @@ class UserController Extends BaseEntityController
         $this->em->flush();
 
         return JsonResponder::responder(null,
-            Response::HTTP_OK,
+            Response::HTTP_NO_CONTENT,
             ['Location'=>'/api/users/'.$user->getId()]
         );
     }
@@ -137,7 +137,7 @@ class UserController Extends BaseEntityController
     {
         $this->em->remove($user);
         $this->em->flush();
-        return JsonResponder::responder(null);
+        return JsonResponder::responder(null,Response::HTTP_NO_CONTENT);
     }
 
 

@@ -18,42 +18,28 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
-class ClientController
+class ClientController extends BaseEntityController
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
+
     /**
      * @var ClientRepository
      */
     private $clientRepository;
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
-
 
     /**
      * @param SerializerInterface $serializer
-     * @param EntityManagerInterface $entityManager
+     * @param EntityManagerInterface $em
      * @param ValidatorInterface $validator
      * @param ClientRepository $clientRepository
      */
     public function __construct(
         SerializerInterface $serializer,
-        EntityManagerInterface $entityManager,
+        EntityManagerInterface $em,
         ValidatorInterface $validator,
         ClientRepository $clientRepository
     )
     {
-        $this->serializer = $serializer;
-        $this->entityManager = $entityManager;
-        $this->validator = $validator;
+        parent::__construct($serializer,$em,$validator);
         $this->clientRepository = $clientRepository;
     }
 
@@ -81,8 +67,8 @@ class ClientController
 
         $client = Client::createClientFromRequest($clientDTO);
 
-        $this->entityManager->persist($client);
-        $this->entityManager->flush();
+        $this->em->persist($client);
+        $this->em->flush();
 
         return JsonResponder::responder(
             null,
@@ -115,9 +101,9 @@ class ClientController
         }
 
         $client->updateClientFromRequest($clientDTO);
-        $this->entityManager->flush();
+        $this->em->flush();
 
-        return JsonResponder::responder(null);
+        return JsonResponder::responder(null,Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -149,8 +135,8 @@ class ClientController
      */
     public function clientDelete(Client $client)
     {
-        $this->entityManager->remove($client);
-        $this->entityManager->flush();
-        return JsonResponder::responder(null);
+        $this->em->remove($client);
+        $this->em->flush();
+        return JsonResponder::responder(null,Response::HTTP_NO_CONTENT);
     }
 }
