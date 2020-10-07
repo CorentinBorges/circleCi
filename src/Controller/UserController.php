@@ -14,8 +14,6 @@ use App\Repository\UserRepository;
 use App\Responder\JsonResponder;
 use App\Validator\Authorizer\ClientAuthorizer;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityNotFoundException;
-use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -65,19 +63,15 @@ class UserController Extends BaseEntityController
      * @Route("/clients/{id}/users/{userId}",name="show_user_details",methods={"GET"})
      * @param Client $client
      * @param string $userId
-     * @param ClientAuthorizer $clientAuthorizer
      * @return Response
-     * @throws Exception
      */
-    public function userDetails(Client $client, string $userId, ClientAuthorizer $clientAuthorizer)
+    public function userDetails(Client $client, string $userId)
     {
         /**
          * @var User $user
          */
         $user = $this->userRepository->findOneBy(['id' => $userId]);
-        if (!$clientAuthorizer->isUserOfClient($client,$user)) {
-            throw new Exception(json_encode("Access denied for those information, this client is not yours"));
-        }
+        ClientAuthorizer::verifyIsUsersClient($client,$user);
         $userJson = $this->serializer->serialize(
             $user,
             'json',
@@ -122,13 +116,19 @@ class UserController Extends BaseEntityController
     }
 
     /**
-     * @Route("/users/{id}",name="update_user",methods={"PUT"})
-     * @param User $user
+     * @Route("/clients/{id}/users/{userId}",name="update_user",methods={"PUT"})
+     * @param Client $client
+     * @param string $userId
      * @param Request $request
      * @return Response
      */
-    public function updateUser(User $user,Request $request)
+    public function updateUser(Client $client, string $userId, Request $request)
     {
+        /**
+         * @var User $user
+         */
+        $user = $this->userRepository->findOneBy(['id' => $userId]);
+        ClientAuthorizer::verifyIsUsersClient($client,$user);
         $userDTO = new UpdateUserFromRequestInput();
         $userDTO->setId($user->getId());
         $newUser = $this->serializer->deserialize(
