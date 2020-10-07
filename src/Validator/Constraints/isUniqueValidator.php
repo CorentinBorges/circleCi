@@ -3,9 +3,6 @@
 
 namespace App\Validator\Constraints;
 
-
-use App\Repository\UserRepository;
-use Doctrine\Bundle\DoctrineBundle\ManagerConfigurator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
