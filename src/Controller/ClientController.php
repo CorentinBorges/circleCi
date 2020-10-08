@@ -10,6 +10,7 @@ use App\Helper\ViolationBuilder;
 use App\Repository\ClientRepository;
 use App\Responder\JsonResponder;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,7 +20,11 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-
+/**
+ * Class ClientController
+ * @package App\Controller
+ * @IsGranted("ROLE_ADMIN")
+ */
 class ClientController extends BaseEntityController
 {
 
@@ -28,17 +33,12 @@ class ClientController extends BaseEntityController
      */
     private $clientRepository;
 
-    /**
-     * @var UserPasswordEncoderInterface
-     */
-    private $userPasswordEncoder;
 
     /**
      * @param SerializerInterface $serializer
      * @param EntityManagerInterface $em
      * @param ValidatorInterface $validator
      * @param ClientRepository $clientRepository
-     * @param UserPasswordEncoderInterface $userPasswordEncoder
      */
     public function __construct(
         SerializerInterface $serializer,
@@ -54,6 +54,7 @@ class ClientController extends BaseEntityController
     /**
      * @Route("/clients",name="create_client",methods={"POST"})
      * @param Request $request
+     * @param EncoderFactoryInterface $encoderFactory
      * @return Response
      */
     public function createClient(Request $request, EncoderFactoryInterface $encoderFactory)
