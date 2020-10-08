@@ -4,6 +4,8 @@
 namespace App\DTO\Client;
 
 
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\Constraints as AcmeAssert;
 
@@ -14,7 +16,17 @@ abstract class ClientFromRequestInput
      * @var string
      * @Assert\NotNull()
      * @AcmeAssert\isUnique()
-     * @Assert\NotBlank(message="Client must have a name")
+     * @Assert\NotBlank(message="Client must have a username")
+     * @Assert\Type(type="string", message="Userame has to be string type")
+     * @Assert\Length(max="64",maxMessage="Username can't exceed 64 characters")
+     */
+    public $username;
+
+    /**
+     * @var string
+     * @Assert\NotNull()
+     * @AcmeAssert\isUnique()
+     * @Assert\NotBlank(message="Client must have a username")
      * @Assert\Type(type="string", message="Name has to be string type")
      * @Assert\Length(max="64",maxMessage="Name can't exceed 64 characters")
      */
@@ -39,8 +51,6 @@ abstract class ClientFromRequestInput
      */
     public $phoneNumber;
 
-    public $roles;
-
     /**
      * @var string
      * @Assert\NotNull()
@@ -55,13 +65,7 @@ abstract class ClientFromRequestInput
      *     pattern="#^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).+#",
      *     message="Password must have at least one Uppercase, one lowercase and one number")
      */
-    public $pass;
-
     public $password;
 
-    public function __construct()
-    {
-        $this->password = password_hash($this->pass, PASSWORD_BCRYPT, ['cost' => 8]);
-        $this->roles = ['ROLE_CLIENT'];
-    }
+
 }

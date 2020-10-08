@@ -13,6 +13,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -27,10 +29,16 @@ class ClientController extends BaseEntityController
     private $clientRepository;
 
     /**
+     * @var UserPasswordEncoderInterface
+     */
+    private $userPasswordEncoder;
+
+    /**
      * @param SerializerInterface $serializer
      * @param EntityManagerInterface $em
      * @param ValidatorInterface $validator
      * @param ClientRepository $clientRepository
+     * @param UserPasswordEncoderInterface $userPasswordEncoder
      */
     public function __construct(
         SerializerInterface $serializer,
@@ -48,7 +56,7 @@ class ClientController extends BaseEntityController
      * @param Request $request
      * @return Response
      */
-    public function createClient(Request $request)
+    public function createClient(Request $request, EncoderFactoryInterface $encoderFactory)
     {
         /**
          * @var CreateClientFromRequestInput $clientDTO
@@ -56,7 +64,7 @@ class ClientController extends BaseEntityController
         $clientDTO = $this->serializer->deserialize(
             $request->getContent(),
             CreateClientFromRequestInput::class,
-            'json',[AbstractNormalizer::IGNORED_ATTRIBUTES=>['roles','password']]
+            'json'
         );
 
         $errors = $this->validator->validate($clientDTO);
@@ -65,7 +73,7 @@ class ClientController extends BaseEntityController
             return JsonResponder::responder(json_encode($errorList),Response::HTTP_BAD_REQUEST);
         }
 
-        $client = Client::createClientFromRequest($clientDTO);
+        $client = Client::createClientFromRequest($clientDTO,$encoderFactory);
 
         $this->em->persist($client);
         $this->em->flush();
@@ -82,6 +90,7 @@ class ClientController extends BaseEntityController
      * @Route ("/clients/{id}",name="update_client",methods={"PUT"})
      * @param Client $client
      * @param Request $request
+     * @return Response
      */
     public function updateClient(Client $client, Request $request)
     {
