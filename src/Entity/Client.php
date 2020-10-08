@@ -3,14 +3,13 @@
 
 namespace App\Entity;
 
-
-
 use App\DTO\Client\CreateClient\CreateClientFromRequestInput;
 use App\DTO\Client\UpdateClient\UpdateClientFromRequestInput;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
@@ -20,7 +19,7 @@ use Symfony\Component\Uid\Uuid;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
  */
-class Client
+class Client implements UserInterface
 {
     /**
      * @var string
@@ -33,7 +32,15 @@ class Client
      * @var string
      *
      * @ORM\Column(type="string", length=64)
-     * @Groups({"list_all", "details"})
+     * @Groups({"details"})
+     */
+    private $username;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column (type="string", length=64)
+     * @Groups({"list_all"})
      */
     private $name;
 
@@ -81,16 +88,22 @@ class Client
      */
     private $users;
 
-    public function __construct(string $name,string $mail,string $phoneNumber, string $password, array $roles)
+    public function __construct(
+        string $name,
+        string $username,
+        string $mail,
+        string $phoneNumber,
+        string $password,
+        EncoderFactoryInterface $encoderFactory)
     {
         $this->id = Uuid::v4()->__toString();
-        $this->createdAt=time();
+        $this->createdAt = time();
         $this->name = $name;
-        $this->mail=$mail;
-        $this->phoneNumber=$phoneNumber;
-        $this->password=$password;
-        $this->roles = $roles;
-
+        $this->username = $username;
+        $this->mail = $mail;
+        $this->phoneNumber = $phoneNumber;
+        $this->password = $encoderFactory->getEncoder(Client::class)->encodePassword($password,'');
+        $this->roles = ['ROLE_CLIENT'];
     }
 
     
@@ -99,9 +112,9 @@ class Client
         return $this->id;
     }
 
-    public function getName(): string
+    public function getUsername(): string
     {
-        return $this->name;
+        return $this->username;
     }
 
     public function getPassword(): string
@@ -138,24 +151,34 @@ class Client
         return array_unique($roles);
     }
 
-    public static function createClientFromRequest(CreateClientFromRequestInput $clientDTO)
+    public static function createClientFromRequest(CreateClientFromRequestInput $clientDTO, EncoderFactoryInterface $encoderFactory)
     {
         return new self(
             $clientDTO->name,
+            $clientDTO->username,
             $clientDTO->mail,
             $clientDTO->phoneNumber,
             $clientDTO->password,
-            $clientDTO->roles
+            $encoderFactory
         );
     }
 
     public function updateClientFromRequest(UpdateClientFromRequestInput $clientDTO)
     {
         $this->name = $clientDTO->name;
+        $this->username = $clientDTO->username;
         $this->phoneNumber=$clientDTO->phoneNumber;
         $this->mail = $clientDTO->mail;
         $this->password=$clientDTO->password;
-        $this->roles = $clientDTO->roles;
     }
 
+    public function getSalt()
+    {
+        return '';
+    }
+
+    public function eraseCredentials()
+    {
+        return;
+    }
 }
