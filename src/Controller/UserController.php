@@ -14,6 +14,7 @@ use App\Repository\UserRepository;
 use App\Responder\JsonResponder;
 use App\Validator\Authorizer\ClientAuthorizer;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,6 +22,11 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * Class UserController
+ * @package App\Controller
+ * @IsGranted("ROLE_CLIENT")
+ */
 class UserController Extends BaseEntityController
 {
     /**
@@ -51,6 +57,7 @@ class UserController Extends BaseEntityController
      * @Route("/clients/{id}/users",name="show_users",methods={"GET"})
      * @param Client $client
      * @return Response
+     * @IsGranted("ROLE_CLIENT")
      */
     public function usersListForOneClient(Client $client)
     {
@@ -71,7 +78,7 @@ class UserController Extends BaseEntityController
          * @var User $user
          */
         $user = $this->userRepository->findOneBy(['id' => $userId]);
-        ClientAuthorizer::verifyIsUsersClient($client,$user,$this->userRepository);
+        ClientAuthorizer::verifyIsUsersClient($client,$user);
         $userJson = $this->serializer->serialize(
             $user,
             'json',
@@ -128,7 +135,7 @@ class UserController Extends BaseEntityController
          * @var User $user
          */
         $user = $this->userRepository->findOneBy(['id' => $userId]);
-        ClientAuthorizer::verifyIsUsersClient($client,$user,$this->userRepository);
+        ClientAuthorizer::verifyIsUsersClient($client,$user);
         $userDTO = new UpdateUserFromRequestInput();
         $userDTO->setId($user->getId());
         $newUser = $this->serializer->deserialize(
@@ -164,7 +171,7 @@ class UserController Extends BaseEntityController
          * @var User $user
          */
         $user = $this->userRepository->findOneBy(['id' => $userId]);
-        ClientAuthorizer::verifyIsUsersClient($client,$user,$this->userRepository);
+        ClientAuthorizer::verifyIsUsersClient($client,$user);
         $this->em->remove($user);
         $this->em->flush();
         return JsonResponder::responder(null,Response::HTTP_NO_CONTENT);
