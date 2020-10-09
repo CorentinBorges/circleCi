@@ -10,16 +10,20 @@ use App\Helper\ViolationBuilder;
 use App\Repository\ClientRepository;
 use App\Responder\JsonResponder;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-
+/**
+ * Class ClientController
+ * @package App\Controller
+ */
 class ClientController extends BaseEntityController
 {
 
@@ -28,33 +32,32 @@ class ClientController extends BaseEntityController
      */
     private $clientRepository;
 
-    /**
-     * @var UserPasswordEncoderInterface
-     */
-    private $userPasswordEncoder;
 
     /**
      * @param SerializerInterface $serializer
      * @param EntityManagerInterface $em
      * @param ValidatorInterface $validator
      * @param ClientRepository $clientRepository
-     * @param UserPasswordEncoderInterface $userPasswordEncoder
+     * @param Security $security
      */
     public function __construct(
         SerializerInterface $serializer,
         EntityManagerInterface $em,
         ValidatorInterface $validator,
-        ClientRepository $clientRepository
+        ClientRepository $clientRepository,
+        Security $security
     )
     {
-        parent::__construct($serializer,$em,$validator);
+        parent::__construct($serializer,$em,$validator,$security);
         $this->clientRepository = $clientRepository;
     }
 
     /**
      * @Route("/clients",name="create_client",methods={"POST"})
      * @param Request $request
+     * @param EncoderFactoryInterface $encoderFactory
      * @return Response
+     * @IsGranted("ROLE_ADMIN")
      */
     public function createClient(Request $request, EncoderFactoryInterface $encoderFactory)
     {
@@ -91,6 +94,7 @@ class ClientController extends BaseEntityController
      * @param Client $client
      * @param Request $request
      * @return Response
+     * @IsGranted("ROLE_ADMIN")
      */
     public function updateClient(Client $client, Request $request)
     {
@@ -118,21 +122,35 @@ class ClientController extends BaseEntityController
     /**
      * @Route("/clients",name="client_list",methods={"GET"})
      * @return Response
+     * @IsGranted("ROLE_CLIENT")
      */
     public function clientList()
     {
-        $all = $this->clientRepository->findAll();
-        $list = $this->serializer->serialize($all, 'json',['groups'=>'list_all']);
-        return JsonResponder::responder($list);
+        /**
+         * @var Client $client
+         */
+        $client = $this->security->getUser();
+        if ($client->isAdmin()) {
+            $all = $this->clientRepository->findAll();
+            $data = $this->serializer->serialize($all, 'json',['groups'=>'list_all']);
+        }
+        else{
+            $clientDatas = $this->clientRepository->findOneBy(['id' => $client->getId()]);
+            $data = $this->serializer->serialize($clientDatas, 'json', ['groups' => 'list_all']);
+        }
+
+        return JsonResponder::responder($data);
     }
 
     /**
      * @Route("/clients/{id}",name="client_details", methods={"GET"})
      * @param Client $client
      * @return Response
+     * @IsGranted("ROLE_CLIENT")
      */
     public function clientDetails(Client $client)
     {
+        $this->security->isGranted('showClientDetail',$client);
         $clientDetails = $this->serializer->serialize($client, 'json',['groups'=>'details']);
         return JsonResponder::responder($clientDetails);
     }
@@ -141,6 +159,7 @@ class ClientController extends BaseEntityController
      * @Route("/clients/{id}",name="delete_client",methods={"DELETE"})
      * @param Client $client
      * @return Response
+     * @IsGranted("ROLE_ADMIN")
      */
     public function clientDelete(Client $client)
     {

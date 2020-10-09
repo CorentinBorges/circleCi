@@ -12,15 +12,21 @@ use App\Helper\ViolationBuilder;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
 use App\Responder\JsonResponder;
-use App\Validator\Authorizer\ClientAuthorizer;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * Class UserController
+ * @package App\Controller
+ * @IsGranted("ROLE_CLIENT")
+ */
 class UserController Extends BaseEntityController
 {
     /**
@@ -34,15 +40,25 @@ class UserController Extends BaseEntityController
     private $userRepository;
 
 
+
+    /**
+     * @param SerializerInterface $serializer
+     * @param EntityManagerInterface $em
+     * @param ValidatorInterface $validator
+     * @param ClientRepository $clientRepository
+     * @param UserRepository $userRepository
+     * @param Security $security
+     */
     public function __construct(
         SerializerInterface $serializer,
         EntityManagerInterface $em,
         ValidatorInterface $validator,
         ClientRepository $clientRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        Security $security
     )
     {
-        parent::__construct($serializer, $em, $validator);
+        parent::__construct($serializer, $em, $validator,$security);
         $this->clientRepository = $clientRepository;
         $this->userRepository = $userRepository;
     }
@@ -51,9 +67,11 @@ class UserController Extends BaseEntityController
      * @Route("/clients/{id}/users",name="show_users",methods={"GET"})
      * @param Client $client
      * @return Response
+     * @IsGranted("ROLE_CLIENT")
      */
     public function usersListForOneClient(Client $client)
     {
+        $this->security->isGranted('showUsersList',$client);
         $usersList = $this->userRepository->findBy(['client' => $client]);
         $listJson = $this->serializer->serialize($usersList, 'json',['groups'=>'list_users']);
         return JsonResponder::responder($listJson);
@@ -71,7 +89,7 @@ class UserController Extends BaseEntityController
          * @var User $user
          */
         $user = $this->userRepository->findOneBy(['id' => $userId]);
-        ClientAuthorizer::verifyIsUsersClient($client,$user,$this->userRepository);
+        $this->security->isGranted('show', $user);
         $userJson = $this->serializer->serialize(
             $user,
             'json',
@@ -128,7 +146,7 @@ class UserController Extends BaseEntityController
          * @var User $user
          */
         $user = $this->userRepository->findOneBy(['id' => $userId]);
-        ClientAuthorizer::verifyIsUsersClient($client,$user,$this->userRepository);
+        $this->security->isGranted('edit', $user);
         $userDTO = new UpdateUserFromRequestInput();
         $userDTO->setId($user->getId());
         $newUser = $this->serializer->deserialize(
@@ -164,7 +182,7 @@ class UserController Extends BaseEntityController
          * @var User $user
          */
         $user = $this->userRepository->findOneBy(['id' => $userId]);
-        ClientAuthorizer::verifyIsUsersClient($client,$user,$this->userRepository);
+        $this->security->isGranted('delete', $user);
         $this->em->remove($user);
         $this->em->flush();
         return JsonResponder::responder(null,Response::HTTP_NO_CONTENT);

@@ -18,9 +18,8 @@ class ClientAuthorizer
     /**
      * @param Client $client
      * @param User $user
-     * @param UserRepository $userRepository
      */
-    public static function verifyIsUsersClient(Client $client, User $user, UserRepository $userRepository)
+    public static function verifyIsUsersClient(Client $client, User $user)
     {
         if ($user->getClient()->getId() !== $client->getId()) {
 
