@@ -11,6 +11,7 @@ use App\Helper\ViolationBuilder;
 use App\Repository\PhoneRepository;
 use App\Responder\JsonResponder;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -65,6 +66,7 @@ class PhoneController extends BaseEntityController
      * @Route ("/phones", name="create_phone", methods={"POST"})
      * @param Request $request
      * @return Response
+     * @IsGranted("ROLE_ADMIN")
      */
     public function createPhone(Request $request)
     {
@@ -94,6 +96,7 @@ class PhoneController extends BaseEntityController
      * @param Phone $phone
      * @param Request $request
      * @return Response
+     * @IsGranted("ROLE_ADMIN")
      */
     public function updatePhone(Phone $phone, Request $request)
     {
@@ -121,6 +124,7 @@ class PhoneController extends BaseEntityController
      * @Route("/phones/{id}",name="delete_phone",methods={"DELETE"})
      * @param Phone $phone
      * @return Response
+     * @IsGranted("ROLE_ADMIN")
      */
     public function deletePhone(Phone $phone)
     {
