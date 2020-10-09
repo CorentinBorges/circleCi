@@ -25,6 +25,7 @@ class User
      * @var string
      * @ORM\Id()
      * @ORM\Column(type="string")
+     * @Groups({"list_users","user_details"})
      */
     private $id;
 
