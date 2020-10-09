@@ -6,11 +6,12 @@ namespace App\Validator\Voters;
 
 use App\Entity\Client;
 use App\Entity\User;
+use App\Validator\Voters\Services\AccessDeniedJsonResponder;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class IsGoodClientVoter extends Voter
+class IsGoodClientForUserVoter extends Voter
 {
     const DELETE = 'delete';
     const EDIT = 'edit';
@@ -41,9 +42,24 @@ class IsGoodClientVoter extends Voter
          * @var User $user
          */
         $user = $subject;
+        $message = '';
+        switch ($attribute){
+            case self::DELETE:
+                $message = "You can not delete this user";
+                break;
+            case self::EDIT:
+                $message = "You can not edit this user";
+                break;
+            case self::SHOW:
+                $message = "You can not see details on this user";
+        }
 
-        if ($user->getClient()->getId() !== $client->getId()) {
-            throw new AccessDeniedHttpException(json_encode("You can not access to this user"));
+        try {
+            if ($user->getId() !== $client->getId()) {
+                throw new AccessDeniedHttpException($message);
+            }
+        } catch ( AccessDeniedHttpException $exception) {
+            AccessDeniedJsonResponder::build($exception);
         }
 
         return true;

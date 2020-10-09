@@ -38,10 +38,7 @@ class UserController Extends BaseEntityController
      * @var UserRepository
      */
     private $userRepository;
-    /**
-     * @var Security
-     */
-    private $security;
+
 
 
     /**
@@ -61,10 +58,9 @@ class UserController Extends BaseEntityController
         Security $security
     )
     {
-        parent::__construct($serializer, $em, $validator);
+        parent::__construct($serializer, $em, $validator,$security);
         $this->clientRepository = $clientRepository;
         $this->userRepository = $userRepository;
-        $this->security = $security;
     }
 
     /**
@@ -75,7 +71,7 @@ class UserController Extends BaseEntityController
      */
     public function usersListForOneClient(Client $client)
     {
-        $this->security->isGranted('showList',$client);
+        $this->security->isGranted('showUsersList',$client);
         $usersList = $this->userRepository->findBy(['client' => $client]);
         $listJson = $this->serializer->serialize($usersList, 'json',['groups'=>'list_users']);
         return JsonResponder::responder($listJson);

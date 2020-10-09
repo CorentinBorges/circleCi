@@ -25,6 +25,7 @@ class Client implements UserInterface
      * @var string
      * @ORM\Id()
      * @ORM\Column(type="string")
+     * @Groups({"list_all"})
      */
     private $id;
 
@@ -84,7 +85,6 @@ class Client implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="client")
-     * @Groups({"details"})
      */
     private $users;
 
@@ -106,7 +106,11 @@ class Client implements UserInterface
         $this->roles = ['ROLE_CLIENT'];
     }
 
-    
+
+    public function getName()
+    {
+        return $this->name;
+    }
     public function getId(): string
     {
         return $this->id;
@@ -181,5 +185,10 @@ class Client implements UserInterface
     public function eraseCredentials()
     {
         return;
+    }
+
+    public function isAdmin()
+    {
+        return in_array("ROLE_ADMIN", $this->getRoles());
     }
 }

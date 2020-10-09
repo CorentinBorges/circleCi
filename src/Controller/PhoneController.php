@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -29,10 +30,11 @@ class PhoneController extends BaseEntityController
         SerializerInterface $serializer,
         EntityManagerInterface $em,
         ValidatorInterface $validator,
-        PhoneRepository $phoneRepository
+        PhoneRepository $phoneRepository,
+        Security $security
     )
     {
-        parent::__construct($serializer,$em,$validator);
+        parent::__construct($serializer,$em,$validator,$security);
         $this->phoneRepository = $phoneRepository;
     }
 
