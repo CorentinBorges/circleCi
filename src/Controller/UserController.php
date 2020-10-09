@@ -97,6 +97,7 @@ class UserController Extends BaseEntityController
                 AbstractNormalizer::IGNORED_ATTRIBUTES=>['client'],
             ]
         );
+
         return JsonResponder::responder($userJson);
     }
 

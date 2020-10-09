@@ -6,7 +6,9 @@ namespace App\Validator\Voters;
 
 use App\Entity\Client;
 use App\Validator\Voters\Services\AccessDeniedJsonResponder;
+use App\Validator\Voters\Services\NotFoundJsonResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -22,6 +24,13 @@ class isGoodClientVoter extends Voter
         }
 
         if (!$subject instanceof Client) {
+            try{
+                if ($subject==null) {
+                    throw new NotFoundHttpException("Client not found");
+                }
+            } catch (NotFoundHttpException $exception) {
+                NotFoundJsonResponse::build($exception);
+            }
             return false;
         }
 
