@@ -67,7 +67,6 @@ class UserController Extends BaseEntityController
      * @Route("/clients/{id}/users",name="show_users",methods={"GET"})
      * @param Client $client
      * @return Response
-     * @IsGranted("ROLE_CLIENT")
      */
     public function usersListForOneClient(Client $client)
     {

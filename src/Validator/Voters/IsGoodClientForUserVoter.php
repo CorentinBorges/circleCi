@@ -55,7 +55,7 @@ class IsGoodClientForUserVoter extends Voter
         }
 
         try {
-            if ($user->getId() !== $client->getId()) {
+            if ($user->getClient()->getId() !== $client->getId()) {
                 throw new AccessDeniedHttpException($message);
             }
         } catch ( AccessDeniedHttpException $exception) {
