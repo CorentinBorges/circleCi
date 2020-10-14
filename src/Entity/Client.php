@@ -25,7 +25,7 @@ class Client implements UserInterface
      * @var string
      * @ORM\Id()
      * @ORM\Column(type="string")
-     * @Groups({"list_all", "on_connect"})
+     * @Groups({"list_all"})
      */
     private $id;
 
@@ -33,7 +33,7 @@ class Client implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string", length=64)
-     * @Groups({"details","on_connect"})
+     * @Groups({"details"})
      */
     private $username;
 
