@@ -1,12 +1,12 @@
 <?php
 
 
-namespace App\Validator\Voters\Services;
+namespace App\Responder\ExceptionResponder;
 
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class NotFoundJsonResponse
+class NotFoundJsonResponder
 {
     public static function build (NotFoundHttpException $exception)
     {

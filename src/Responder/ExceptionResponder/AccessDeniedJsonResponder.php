@@ -1,17 +1,16 @@
 <?php
 
 
-namespace App\Validator\Voters\Services;
+namespace App\Responder\ExceptionResponder;
 
-use App\Responder\JsonResponder;
-use Symfony\Component\HttpFoundation\Response;
+
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class AccessDeniedJsonResponder
 {
     public static function build (AccessDeniedHttpException $exception)
     {
-         echo json_encode(array("error"=>[
+        echo json_encode(array("error"=>[
             'Message'=>"Access denied",
             'details'=>$exception->getMessage()
         ]));

@@ -11,11 +11,15 @@ use App\Entity\User;
 use App\Helper\ViolationBuilder;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
+use App\Responder\ExceptionResponder\AccessDeniedJsonResponder;
 use App\Responder\JsonResponder;
+use App\Validator\ExceptionHandler\AccessDeniedHandler;
+use App\Validator\ExceptionHandler\EntityNotFoundHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -70,7 +74,12 @@ class UserController Extends BaseEntityController
      */
     public function usersListForOneClient(Client $client)
     {
-        $this->security->isGranted('showUsersList',$client);
+        AccessDeniedHandler::build(
+            $this->security,
+            'showUsersList',
+            $client,
+            "Those users are not yours, you can not access to them"
+        );
         $usersList = $this->userRepository->findBy(['client' => $client]);
         $listJson = $this->serializer->serialize($usersList, 'json',['groups'=>'list_users']);
         return JsonResponder::responder($listJson);
@@ -88,7 +97,13 @@ class UserController Extends BaseEntityController
          * @var User $user
          */
         $user = $this->userRepository->findOneBy(['id' => $userId]);
-        $this->security->isGranted('show', $user);
+        EntityNotFoundHandler::build($user,'User not found');
+        AccessDeniedHandler::build(
+            $this->security,
+            'show',
+            $user,
+            "You can not see this user's details"
+        );
         $userJson = $this->serializer->serialize(
             $user,
             'json',
@@ -146,7 +161,13 @@ class UserController Extends BaseEntityController
          * @var User $user
          */
         $user = $this->userRepository->findOneBy(['id' => $userId]);
-        $this->security->isGranted('edit', $user);
+        EntityNotFoundHandler::build($user,'User not found');
+        AccessDeniedHandler::build(
+            $this->security,
+            'edit',
+            $user,
+            "You can not edit this user"
+        );
         $userDTO = new UpdateUserFromRequestInput();
         $userDTO->setId($user->getId());
         $newUser = $this->serializer->deserialize(
@@ -182,7 +203,13 @@ class UserController Extends BaseEntityController
          * @var User $user
          */
         $user = $this->userRepository->findOneBy(['id' => $userId]);
-        $this->security->isGranted('delete', $user);
+        EntityNotFoundHandler::build($user,'User not found');
+        AccessDeniedHandler::build(
+            $this->security,
+            'delete',
+            $user,
+            "You can not delete this user"
+        );
         $this->em->remove($user);
         $this->em->flush();
         return JsonResponder::responder(null,Response::HTTP_NO_CONTENT);

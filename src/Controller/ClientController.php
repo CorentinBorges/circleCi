@@ -9,6 +9,7 @@ use App\Entity\Client;
 use App\Helper\ViolationBuilder;
 use App\Repository\ClientRepository;
 use App\Responder\JsonResponder;
+use App\Validator\ExceptionHandler\AccessDeniedHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
@@ -122,23 +123,12 @@ class ClientController extends BaseEntityController
     /**
      * @Route("/clients",name="client_list",methods={"GET"})
      * @return Response
-     * @IsGranted("ROLE_CLIENT")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function clientList()
     {
-        /**
-         * @var Client $client
-         */
-        $client = $this->security->getUser();
-        if ($client->isAdmin()) {
-            $all = $this->clientRepository->findAll();
-            $data = $this->serializer->serialize($all, 'json',['groups'=>'list_all']);
-        }
-        else{
-            $clientDatas = $this->clientRepository->findOneBy(['id' => $client->getId()]);
-            $data = $this->serializer->serialize($clientDatas, 'json', ['groups' => 'list_all']);
-        }
-
+        $all = $this->clientRepository->findAll();
+        $data = $this->serializer->serialize($all, 'json',['groups'=>'list_all']);
         return JsonResponder::responder($data);
     }
 
@@ -150,7 +140,12 @@ class ClientController extends BaseEntityController
      */
     public function clientDetails(Client $client)
     {
-        $this->security->isGranted('showClientDetail',$client);
+        AccessDeniedHandler::build(
+            $this->security,
+            'showClientDetail',
+            $client,
+            "You can not see this client's details"
+        );
         $clientDetails = $this->serializer->serialize($client, 'json',['groups'=>'details']);
         return JsonResponder::responder($clientDetails);
     }
