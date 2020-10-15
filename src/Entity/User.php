@@ -74,7 +74,7 @@ class User
         $this->username = $username;
         $this->email = $email;
         $this->client = $client;
-        $this->roles = ['ROLE_USER'];
+        $this->roles = ['ROLE_ADMIN'];
     }
 
     public function getRoles(): array

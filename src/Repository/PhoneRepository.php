@@ -14,4 +14,9 @@ class PhoneRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Phone::class);
     }
+
+    public function findAll()
+    {
+        return $this->findBy(array(),array('createdAt'=>'ASC'));
+    }
 }

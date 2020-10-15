@@ -8,18 +8,13 @@ use App\Entity\Client;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class isGoodClientVoter extends Voter
+class IsAdminVoter extends Voter
 {
-    const SHOW_USERS_LIST = 'showUsersList';
-    const SHOW_CLIENT_DETAIL='showClientDetail';
+    const ADMIN = 'admin_client';
 
     protected function supports(string $attribute, $subject)
     {
-        if (!in_array($attribute, [self::SHOW_USERS_LIST, self::SHOW_CLIENT_DETAIL])) {
-            return false;
-        }
-
-        if (!$subject instanceof Client) {
+        if (!in_array($attribute, [self::ADMIN])) {
             return false;
         }
 
@@ -28,21 +23,17 @@ class isGoodClientVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token)
     {
-        $client=$token->getUser();
+        /**
+         * @var Client $client
+         */
+        $client = $token->getUser();
 
         if (!$client instanceof Client) {
             return false;
         }
-
-        /**
-         * @var Client $clientCalled
-         */
-        $clientCalled = $subject;
-
-        if ($clientCalled->getId() !== $client->getId()) {
-            return $client->isAdmin();
+        if (!$client->isAdmin()) {
+            return false;
         }
         return true;
     }
-
 }

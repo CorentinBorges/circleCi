@@ -128,7 +128,7 @@ class ClientController extends BaseEntityController
     public function clientList()
     {
         $all = $this->clientRepository->findAll();
-        $data = $this->serializer->serialize($all, 'json',['groups'=>'list_all']);
+        $data = $this->serializer->serialize($all, 'json',['groups'=>'list_client']);
         return JsonResponder::responder($data);
     }
 
@@ -146,7 +146,7 @@ class ClientController extends BaseEntityController
             $client,
             "You can not see this client's details"
         );
-        $clientDetails = $this->serializer->serialize($client, 'json',['groups'=>'details']);
+        $clientDetails = $this->serializer->serialize($client, 'json',['groups'=>'client_details']);
         return JsonResponder::responder($clientDetails);
     }
 
