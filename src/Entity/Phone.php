@@ -30,7 +30,7 @@ class Phone
      * @var string
      *
      * @ORM\Column(type="string", length=50)
-     * @Groups({"list_phone"})
+     * @Groups({"list_phone","detail_phone"})
      */
     private $brand;
 
@@ -38,7 +38,7 @@ class Phone
      * @var string
      *
      * @ORM\Column (type="string", length=60)
-     * @Groups({"list_phone"})
+     * @Groups({"list_phone","detail_phone"})
      */
     private $model;
 
@@ -46,7 +46,7 @@ class Phone
      * @var float
      *
      * @ORM\Column(type="float",precision= 6, scale = 2)
-     * @Groups({"list_phone"})
+     * @Groups({"list_phone","detail_phone"})
      */
     private $price;
 
@@ -54,6 +54,7 @@ class Phone
      * @var string
      *
      * @ORM\Column (type="string", length=50)
+     * @Groups({"detail_phone"})
      */
     private $system;
 
@@ -61,6 +62,7 @@ class Phone
      * @var float
      *
      * @ORM\Column(type="float", precision=3, scale=2)
+     * @Groups({"detail_phone"})
      */
     private $screenSize;
 
@@ -68,6 +70,7 @@ class Phone
      * @var int
      *
      * @ORM\Column(type="integer")
+     * @Groups({"detail_phone"})
      */
     private $storage;
 
@@ -75,7 +78,7 @@ class Phone
      * @var string
      *
      * @ORM\Column(type="string", length=16)
-     *
+     * @Groups({"detail_phone"})
      */
     private $color;
 
@@ -83,6 +86,7 @@ class Phone
      * @var string
      *
      * @ORM\Column (type="text")
+     * @Groups({"detail_phone"})
      */
     private $description;
 

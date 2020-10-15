@@ -58,7 +58,7 @@ class PhoneController extends BaseEntityController
      */
     public function detailOnePhone(Phone $phone)
     {
-        $phoneJson = $this->serializer->serialize($phone, 'json');
+        $phoneJson = $this->serializer->serialize($phone, 'json',['groups'=>"detail_phone"]);
         return JsonResponder::responder($phoneJson);
     }
 

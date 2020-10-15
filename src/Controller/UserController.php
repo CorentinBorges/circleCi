@@ -11,7 +11,6 @@ use App\Entity\User;
 use App\Helper\ViolationBuilder;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
-use App\Responder\ExceptionResponder\AccessDeniedJsonResponder;
 use App\Responder\JsonResponder;
 use App\Validator\ExceptionHandler\AccessDeniedHandler;
 use App\Validator\ExceptionHandler\EntityNotFoundHandler;
@@ -19,10 +18,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -70,6 +70,8 @@ class UserController Extends BaseEntityController
     /**
      * @Route("/clients/{id}/users",name="show_users",methods={"GET"})
      * @param Client $client
+     * @param UrlGeneratorInterface $generator
+     * @param ObjectNormalizer $objectNormalizer
      * @return Response
      */
     public function usersListForOneClient(Client $client)
@@ -80,6 +82,7 @@ class UserController Extends BaseEntityController
             $client,
             "Those users are not yours, you can not access to them"
         );
+
         $usersList = $this->userRepository->findBy(['client' => $client]);
         $listJson = $this->serializer->serialize($usersList, 'json',['groups'=>'list_users']);
         return JsonResponder::responder($listJson);
