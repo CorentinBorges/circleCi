@@ -15,4 +15,9 @@ class ClientRepository extends ServiceEntityRepository
         parent::__construct($managerRegistry, Client::class);
     }
 
+    public function findAll()
+    {
+        return $this->findBy(array(),array('createdAt'=>'ASC'));
+    }
+
 }

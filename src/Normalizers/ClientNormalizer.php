@@ -36,6 +36,17 @@ class ClientNormalizer implements ContextAwareNormalizerInterface
             ], UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
+        if (in_array('client_details',$context)) {
+            if ($this->security->isGranted('admin_client')) {
+                $data['/link']['update'] = $this->router->generate('update_client', [
+                    'id'=>$client->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL);
+                $data['/link']['delete'] = $this->router->generate('delete_client', [
+                    'id'=>$client->getId(),
+                ], UrlGeneratorInterface::ABSOLUTE_URL);
+            }
+        }
+
         return $data;
     }
 
