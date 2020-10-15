@@ -5,7 +5,6 @@ namespace App\Normalizers;
 
 
 use App\Entity\Phone;
-use App\Entity\User;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;

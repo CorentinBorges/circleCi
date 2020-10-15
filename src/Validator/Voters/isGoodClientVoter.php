@@ -39,7 +39,7 @@ class isGoodClientVoter extends Voter
          */
         $clientCalled = $subject;
 
-        if ($client->isAdmin() || ($clientCalled->getId() !== $client->getId())) {
+        if (!$client->isAdmin() || ($clientCalled->getId() !== $client->getId())) {
             return false;
         }
         return true;

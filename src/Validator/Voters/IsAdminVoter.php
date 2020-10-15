@@ -18,7 +18,6 @@ class IsAdminVoter extends Voter
             return false;
         }
 
-
         return true;
     }
 
@@ -28,9 +27,6 @@ class IsAdminVoter extends Voter
          * @var Client $client
          */
         $client = $token->getUser();
-
-
-
 
         if (!$client instanceof Client) {
             return false;
