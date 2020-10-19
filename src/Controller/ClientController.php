@@ -93,9 +93,7 @@ class ClientController extends BaseEntityController
      *     required = true
      * )
      *
-     * @OA\Parameter (
-     *     name = "JSON",
-     *     in = "query",
+     * @OA\RequestBody  (
      *     required = true,
      *     description="Client object that will be created",
      *     @OA\JsonContent(ref=@Model(type=Client::class, groups={"create_client"}))
@@ -180,9 +178,7 @@ class ClientController extends BaseEntityController
      *    description="Client's id"
      * )
      *
-     * @OA\Parameter (
-     *     name = "JSON",
-     *     in = "query",
+     * @OA\RequestBody  (
      *     required = true,
      *     description="Client object that we will update",
      *     @OA\JsonContent(ref=@Model(type=Client::class, groups={"create_client"}))

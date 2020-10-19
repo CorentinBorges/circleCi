@@ -177,9 +177,7 @@ class PhoneController extends BaseEntityController
      *     required = true
      * )
      *
-     * @OA\Parameter (
-     *     name = "JSON",
-     *     in = "query",
+     * @OA\RequestBody  (
      *     required = true,
      *     description="Phone object that will be created",
      *     @OA\JsonContent(ref=@Model(type=Phone::class, groups={"detail_phone"}))
@@ -256,9 +254,7 @@ class PhoneController extends BaseEntityController
      *    description="Phone's id"
      * )
      *
-     * @OA\Parameter (
-     *     name = "JSON",
-     *     in = "query",
+     * @OA\RequestBody  (
      *     required = true,
      *     description="Phone object that we will update",
      *     @OA\JsonContent(ref=@Model(type=Phone::class, groups={"detail_phone"}))

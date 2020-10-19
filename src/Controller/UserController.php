@@ -19,12 +19,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security as SecureSwag;
+use OpenApi\Annotations as OA;
 
 /**
  * Class UserController
@@ -68,11 +69,49 @@ class UserController Extends BaseEntityController
     }
 
     /**
+     * User's list for one client
+     *
+     * <h1>Access for user's owner only</h1>
      * @Route("/clients/{id}/users",name="show_users",methods={"GET"})
      * @param Client $client
-     * @param UrlGeneratorInterface $generator
-     * @param ObjectNormalizer $objectNormalizer
      * @return Response
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="OK",
+     *     @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property (property="Users",ref=@Model(type=User::class,groups={"list_users"})),
+     *          @OA\Property (
+     *              property="_links",
+     *              type="array",
+     *              items=@OA\Items (type="string"),
+     *              example={"self": "string"})
+     *          )
+     *     )
+     *  )
+     * @OA\Response(
+     *     response=401,
+     *     description="UNAUTHORIZED - JWT token not found || JWT token expired || Invalid JWT token",
+     *
+     *  )
+     *
+     * @OA\Parameter(
+     *     name="HTTP_Authorization",
+     *     in="header",
+     *     description="Bearer {Token}",
+     *     required= true
+     * )
+     *
+     * @OA\Parameter (
+     *     name="id",
+     *     in="path",
+     *     description="Client's id",
+     *     required=true
+     * )
+     *
+     * @OA\Tag(name="User")
+     * @SecureSwag(name="Bearer")
      */
     public function usersListForOneClient(Client $client)
     {
@@ -89,10 +128,60 @@ class UserController Extends BaseEntityController
     }
 
     /**
+     * Detail one User
+     *
+     * <h1>Access for user's owner only</h1>
      * @Route("/clients/{id}/users/{userId}",name="show_user_details",methods={"GET"})
      * @param Client $client
      * @param string $userId
      * @return Response
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="OK",
+     *     @OA\JsonContent(
+     *         @OA\Property ( property="User detail",ref=@Model(type=User::class, groups={"user_details"})),
+     *         @OA\Property (
+     *              property="_links",
+     *              type="array",
+     *              items=@OA\Items (type="string"),
+     *              example={"update": "string", "delete": "string"})
+     *      )
+     *  )
+     *
+     * @OA\Response(
+     *     response=401,
+     *     description="UNAUTHORIZED - JWT token not found || JWT token expired || Invalid JWT token",
+     *  )
+     *
+     * @OA\Response(
+     *     response=404,
+     *     description="NOT FOUND"
+     *  )
+     *
+     * @OA\Parameter(
+     *     name="HTTP_Authorization",
+     *     in="header",
+     *     description="Bearer {Token}",
+     *     required= true,
+     * )
+     *
+     * @OA\Parameter (
+     *     name="id",
+     *     in="path",
+     *     description="Client's id",
+     *     required=true
+     * )
+     *
+     * @OA\Parameter (
+     *     name="userId",
+     *     in="path",
+     *     description="User's id",
+     *     required=true
+     * )
+     *
+     * @OA\Tag(name="User")
+     * @SecureSwag(name="Bearer")
      */
     public function userDetails(Client $client, string $userId)
     {
@@ -120,10 +209,57 @@ class UserController Extends BaseEntityController
     }
 
     /**
+     * Create a user
+     *
+     * <h1> Client access only </h1>
      * @Route ("/clients/{id}/users",name="create_user", methods={"POST"})
      * @param Client $client
      * @param Request $request
      * @return Response
+     *
+    @OA\Response(
+     *     response=201,
+     *     description="CREATED",
+     *     @OA\Header(header="Location", description="Link to new user",
+     *          @OA\Schema (
+     *              type="string"
+     *          )
+     *      )
+     *  )
+     *
+     * @OA\Response(
+     *     response=400,
+     *     description="BAD REQUEST"
+     *  )
+     *
+     * @OA\Response(
+     *     response=401,
+     *     description="UNAUTHORIZED - JWT token not found || JWT token expired || Invalid JWT token"
+     *  )
+     *
+     * @OA\Parameter(
+     *     name="HTTP_Authorization",
+     *     in = "header",
+     *     description = "Bearer {Token}",
+     *     required = true
+     * )
+     *
+     * @OA\Parameter (
+     *     name="id",
+     *     in="path",
+     *     description="Client's id",
+     *     required=true
+     * )
+     *
+     * @OA\RequestBody  (
+     *     required = true,
+     *     description="User object that will be created",
+     *     @OA\JsonContent(ref=@Model(type=User::class, groups={"user_details"}))
+     * )
+     *
+     * @OA\Tag(name="User")
+     * @SecureSwag(name="Bearer")
+     *
      */
     public function createUser(Client $client,Request $request)
     {
@@ -152,11 +288,66 @@ class UserController Extends BaseEntityController
     }
 
     /**
+     * Update a user
+     *
+     * <h1> User's owner  access only </h1>
      * @Route("/clients/{id}/users/{userId}",name="update_user",methods={"PUT"})
      * @param Client $client
      * @param string $userId
      * @param Request $request
      * @return Response
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="OK",
+     *     @OA\Header(header="Location", description="Link to user",@OA\Schema (type="string"))
+     *  )
+     *
+     * @OA\Response(
+     *     response=400,
+     *     description="BAD REQUEST"
+     *  )
+     *
+     * @OA\Response(
+     *     response=401,
+     *     description="UNAUTHORIZED - JWT token not found || JWT token expired || Invalid JWT token"
+     *  )
+     *
+     * @OA\Response(
+     *     response=404,
+     *     description="NOT FOUND"
+     *  )
+     *
+     * @OA\Parameter(
+     *     name="HTTP_Authorization",
+     *     in = "header",
+     *     description = "Bearer {Token}",
+     *     required = true
+     * )
+     *
+     * @OA\Parameter (
+     *    name = "id",
+     *    in = "path",
+     *    required = true,
+     *    description="Client's id"
+     * )
+     *
+     * @OA\Parameter (
+     *    name = "userId",
+     *    in = "path",
+     *    required = true,
+     *    description="User's id"
+     * )
+     *
+     * @OA\RequestBody  (
+     *     required = true,
+     *     description="Client object that we will update",
+     *     @OA\JsonContent(ref=@Model(type=User::class, groups={"user_details"}))
+     * )
+     *
+     * @OA\Tag(name="User")
+     * @SecureSwag(name="Bearer")
+     *
      */
     public function updateUser(Client $client, string $userId, Request $request)
     {
@@ -195,10 +386,53 @@ class UserController Extends BaseEntityController
     }
 
     /**
+     * Delete user
+     *
+     * <h1>User's owner only</h1>
      * @Route("/clients/{id}/users/{userId}",name="delete_user",methods={"DELETE"})
      * @param Client $client
      * @param string $userId
      * @return Response
+     *
+    @OA\Response(
+     *     response=204,
+     *     description="NO CONTENT",
+     *  )
+     *
+     * @OA\Response(
+     *     response=401,
+     *     description="UNAUTHORIZED - JWT token not found || JWT token expired || Invalid JWT token"
+     *  )
+     *
+     * @OA\Response(
+     *     response=404,
+     *     description="NOT FOUND"
+     *  )
+     *
+     * @OA\Parameter(
+     *     name="HTTP_Authorization",
+     *     in = "header",
+     *     description = "Bearer {Token}",
+     *     required = true
+     * )
+     *
+     * @OA\Parameter (
+     *    name = "id",
+     *    in = "path",
+     *    required = true,
+     *    description="Client's id"
+     * )
+     *
+     * @OA\Parameter (
+     *    name = "userId",
+     *    in = "path",
+     *    required = true,
+     *    description="User's id"
+     * )
+     *
+     * @OA\Tag(name="User")
+     * @SecureSwag(name="Bearer")
+     *
      */
     public function deleteUser(Client $client,string $userId)
     {
