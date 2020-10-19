@@ -45,7 +45,7 @@ class PhoneController extends BaseEntityController
     }
 
     //todo: add better links
-    //todo: add parameters
+    //todo: ask for doc.json
 
     /**
      * List all phones.
@@ -61,7 +61,11 @@ class PhoneController extends BaseEntityController
      *     @OA\JsonContent(
      *          type="object",
      *          @OA\Property (property="Phone",ref=@Model(type=Phone::class,groups={"list_phone"})),
-     *          @OA\Property (property="links",type="string")
+     *          @OA\Property (
+     *              property="_links",
+     *              type="object",
+     *              @OA\Property (property="self",type="string"),
+     *          )
      *     )
      *  )
      * @OA\Response(
@@ -102,9 +106,10 @@ class PhoneController extends BaseEntityController
      *         @OA\Property ( property="Phone detail",ref=@Model(type=Phone::class, groups={"detail_phone"})),
      *         @OA\Property (
      *              property="_links",
-     *              type="array",
-     *              items=@OA\Items (type="string"),
-     *              example={"update": "string", "delete": "string"})
+     *              type="object",
+     *              @OA\Property (property="update",type="string"),
+     *              @OA\Property (property="delete",type="string")
+     *          )
      *      )
      *  )
      *

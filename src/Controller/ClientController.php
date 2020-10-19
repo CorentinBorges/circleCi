@@ -57,6 +57,18 @@ class ClientController extends BaseEntityController
     }
 
     /**
+     * Authentication
+     *
+     * @Route  ("/doc.json",name="doc_json",methods={"GET"})
+     * @OA\Response(
+     *     response=200,
+     *     description="OK",
+     * )
+     *
+     * @OA\Tag (name="Doc")
+     */
+
+    /**
      * Create a client
      *
      * <h1>Admin access only</h1>
@@ -224,7 +236,11 @@ class ClientController extends BaseEntityController
      *     @OA\JsonContent(
      *          type="object",
      *          @OA\Property (property="Client",ref=@Model(type=Client::class,groups={"list_client"})),
-     *          @OA\Property (property="links",type="string")
+     *          @OA\Property (
+     *              property="_links",
+     *              type="object",
+     *              @OA\Property (property="self",type="string"),
+     *          )
      *     )
      *  )
      * @OA\Response(
@@ -265,9 +281,10 @@ class ClientController extends BaseEntityController
      *         @OA\Property (ref=@Model(type=Client::class, groups={"client_details"})),
      *         @OA\Property (
      *              property="_links",
-     *              type="array",
-     *              items=@OA\Items (type="string"),
-     *              example={"update": "string", "delete": "string"})
+     *              type="object",
+     *              @OA\Property (property="update",type="string"),
+     *              @OA\Property (property="delete",type="string")
+     *          )
      *      )
      *  )
      *

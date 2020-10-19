@@ -68,6 +68,7 @@ class UserController Extends BaseEntityController
         $this->userRepository = $userRepository;
     }
 
+
     /**
      * User's list for one client
      *
@@ -84,9 +85,8 @@ class UserController Extends BaseEntityController
      *          @OA\Property (property="Users",ref=@Model(type=User::class,groups={"list_users"})),
      *          @OA\Property (
      *              property="_links",
-     *              type="array",
-     *              items=@OA\Items (type="string"),
-     *              example={"self": "string"})
+     *              type="object",
+     *              @OA\Property (property="self",type="string")
      *          )
      *     )
      *  )
@@ -143,11 +143,12 @@ class UserController Extends BaseEntityController
      *         @OA\Property ( property="User detail",ref=@Model(type=User::class, groups={"user_details"})),
      *         @OA\Property (
      *              property="_links",
-     *              type="array",
-     *              items=@OA\Items (type="string"),
-     *              example={"update": "string", "delete": "string"})
-     *      )
-     *  )
+     *              type="object",
+     *              @OA\Property (property="update",type="string"),
+     *              @OA\Property (property="delete",type="string")
+     *          )
+     *     )
+     * )
      *
      * @OA\Response(
      *     response=401,
