@@ -19,6 +19,11 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security as SecureSwag;
+use OpenApi\Annotations as OA;
+
+
 
 class PhoneController extends BaseEntityController
 {
@@ -39,10 +44,44 @@ class PhoneController extends BaseEntityController
         $this->phoneRepository = $phoneRepository;
     }
 
+    //todo: add better links
+    //todo: ask for doc.json
+
     /**
+     * List all phones.
+     *
+     * <h1>Access for clients, users and admin</h1>
      * @Route("/phones", name="list_phones", methods={"GET"})
      * @param JsonResponder $jsonResponder
      * @return Response
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="OK",
+     *     @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property (property="Phone",ref=@Model(type=Phone::class,groups={"list_phone"})),
+     *          @OA\Property (
+     *              property="_links",
+     *              type="object",
+     *              @OA\Property (property="self",type="string"),
+     *          )
+     *     )
+     *  )
+     * @OA\Response(
+     *     response=401,
+     *     description="UNAUTHORIZED - JWT token not found || JWT token expired || Invalid JWT token",
+     *
+     *  )
+     *
+     * @OA\Parameter(
+     *     name="HTTP_Authorization",
+     *     in="header",
+     *     description="Bearer {Token}",
+     *     required= true
+     * )
+     * @OA\Tag(name="Phone")
+     * @SecureSwag(name="Bearer")
      */
     public function allPhones( JsonResponder $jsonResponder)
     {
@@ -52,9 +91,54 @@ class PhoneController extends BaseEntityController
     }
 
     /**
+     * One phone description
+     *
+     * <h1>Access for clients, users and admin</h1>
+     *
      * @Route("/phones/{id}",name="detail_phone",methods={"GET"})
      * @param Phone $phone
      * @return Response
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="OK",
+     *     @OA\JsonContent(
+     *         @OA\Property ( property="Phone detail",ref=@Model(type=Phone::class, groups={"detail_phone"})),
+     *         @OA\Property (
+     *              property="_links",
+     *              type="object",
+     *              @OA\Property (property="update",type="string"),
+     *              @OA\Property (property="delete",type="string")
+     *          )
+     *      )
+     *  )
+     *
+     * @OA\Response(
+     *     response=401,
+     *     description="UNAUTHORIZED - JWT token not found || JWT token expired || Invalid JWT token",
+     *  )
+     *
+     * @OA\Response(
+     *     response=404,
+     *     description="NOT FOUND"
+     *  )
+     *
+     * @OA\Parameter(
+     *     name="HTTP_Authorization",
+     *     in="header",
+     *     description="Bearer {Token}",
+     *     required= true,
+     * )
+     *
+     * @OA\Parameter (
+     *     name="id",
+     *     in="path",
+     *     description="Phone's id",
+     *     required=true
+     * )
+     *
+     * @OA\Tag(name="Phone")
+     * @SecureSwag(name="Bearer")
      */
     public function detailOnePhone(Phone $phone)
     {
@@ -63,10 +147,49 @@ class PhoneController extends BaseEntityController
     }
 
     /**
+     * Create a phone
+     *
+     * <h1>Only Admin access</h1>
      * @Route ("/phones", name="create_phone", methods={"POST"})
      * @param Request $request
      * @return Response
      * @IsGranted("ROLE_ADMIN")
+     *
+     * @OA\Response(
+     *     response=201,
+     *     description="CREATED",
+     *     @OA\Header(header="Location", description="Link to phone",
+     *          @OA\Schema (
+     *              type="string"
+     *          )
+     *      )
+     *  )
+     *
+     * @OA\Response(
+     *     response=400,
+     *     description="BAD REQUEST"
+     *  )
+     *
+     * @OA\Response(
+     *     response=401,
+     *     description="UNAUTHORIZED - JWT token not found || JWT token expired || Invalid JWT token"
+     *  )
+     *
+     * @OA\Parameter(
+     *     name="HTTP_Authorization",
+     *     in = "header",
+     *     description = "Bearer {Token}",
+     *     required = true
+     * )
+     *
+     * @OA\RequestBody  (
+     *     required = true,
+     *     description="Phone object that will be created",
+     *     @OA\JsonContent(ref=@Model(type=Phone::class, groups={"detail_phone"}))
+     * )
+     *
+     * @OA\Tag(name="Phone")
+     * @SecureSwag(name="Bearer")
      */
     public function createPhone(Request $request)
     {
@@ -92,11 +215,58 @@ class PhoneController extends BaseEntityController
     }
 
     /**
+     * Update a phone
+     *
+     * <h1>Only Admin access</h1>
      * @Route ("/phones/{id}",name="update_phone",methods={"PUT"})
      * @param Phone $phone
      * @param Request $request
      * @return Response
      * @IsGranted("ROLE_ADMIN")
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="OK",
+     *     @OA\Header(header="Location", description="Link to phone",@OA\Schema (type="string"))
+     *  )
+     *
+     * @OA\Response(
+     *     response=400,
+     *     description="BAD REQUEST"
+     *  )
+     *
+     * @OA\Response(
+     *     response=401,
+     *     description="UNAUTHORIZED - JWT token not found || JWT token expired || Invalid JWT token"
+     *  )
+     *
+     * @OA\Response(
+     *     response=404,
+     *     description="NOT FOUND"
+     *  )
+     *
+     * @OA\Parameter(
+     *     name="HTTP_Authorization",
+     *     in = "header",
+     *     description = "Bearer {Token}",
+     *     required = true
+     * )
+     *
+     * @OA\Parameter (
+     *    name = "id",
+     *    in = "path",
+     *    required = true,
+     *    description="Phone's id"
+     * )
+     *
+     * @OA\RequestBody  (
+     *     required = true,
+     *     description="Phone object that we will update",
+     *     @OA\JsonContent(ref=@Model(type=Phone::class, groups={"detail_phone"}))
+     * )
+     *
+     * @OA\Tag(name="Phone")
+     * @SecureSwag(name="Bearer")
      */
     public function updatePhone(Phone $phone, Request $request)
     {
@@ -121,10 +291,45 @@ class PhoneController extends BaseEntityController
     }
 
     /**
+     * Delete a phone
+     *
+     * <h1>Admin access only</h1>
      * @Route("/phones/{id}",name="delete_phone",methods={"DELETE"})
      * @param Phone $phone
      * @return Response
      * @IsGranted("ROLE_ADMIN")
+     *
+     * @OA\Response(
+     *     response=204,
+     *     description="NO CONTENT",
+     *  )
+     *
+     * @OA\Response(
+     *     response=401,
+     *     description="UNAUTHORIZED - JWT token not found || JWT token expired || Invalid JWT token"
+     *  )
+     *
+     * @OA\Response(
+     *     response=404,
+     *     description="NOT FOUND"
+     *  )
+     *
+     * @OA\Parameter(
+     *     name="HTTP_Authorization",
+     *     in = "header",
+     *     description = "Bearer {Token}",
+     *     required = true
+     * )
+     *
+     * @OA\Parameter (
+     *    name = "id",
+     *    in = "path",
+     *    required = true,
+     *    description="Phone's id"
+     * )
+     *
+     * @OA\Tag(name="Phone")
+     * @SecureSwag(name="Bearer")
      */
     public function deletePhone(Phone $phone)
     {

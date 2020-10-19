@@ -1,0 +1,27 @@
+nelmio_api_doc:
+    areas:
+        path_patterns: # an array of regexps
+            - ^/api(?!/doc$)
+
+    documentation:
+        servers:
+            - url: http://127.0.0.1:8000/unsafe
+              description: API over HTTP
+            - url: https://127.0.0.1:8000/secured
+              description: API over HTTPS
+        info:
+            title: BileMo
+            description: The BileMo's Phone's catalogue
+            version: 1.0.0
+        components:
+            securitySchemes:
+                Bearer:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+
+        security:
+            - Bearer: [ ]
+
+
+

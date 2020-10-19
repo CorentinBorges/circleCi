@@ -20,6 +20,12 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        doc:
+            pattern: ^/api/doc
+            stateless: true
+            anonymous: true
+            security: false
+
         login:
             pattern: ^/api/login
             stateless: true

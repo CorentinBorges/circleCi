@@ -4,9 +4,11 @@
 namespace App\Entity;
 
 
+
 use App\DTO\Phone\CreatePhone\CreatePhoneFromRequestInput;
 use App\DTO\Phone\UpdatePhone\UpdatePhoneFromRequestInput;
 use Doctrine\ORM\Mapping as ORM;
+use OpenApi\Annotations as OA;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
@@ -22,6 +24,7 @@ class Phone
      * @var string
      * @ORM\Id()
      * @ORM\Column(type="string")
+     * @OA\Property (description="Phone's id")
      */
     private $id;
 

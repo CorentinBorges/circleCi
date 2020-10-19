@@ -25,18 +25,18 @@ class UserNormalizer implements ContextAwareNormalizerInterface
         $data = $this->normalizer->normalize($user, $format, $context);
 
         if (in_array('list_users',$context)) {
-            $data['/link']['self'] = $this->router->generate('show_user_details', [
+            $data['_link']['self'] = $this->router->generate('show_user_details', [
                 'id'=>$user->getClient()->getId(),
                 'userId' => $user->getId(),
             ], UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         if (in_array('user_details',$context)) {
-            $data['/link']['update'] = $this->router->generate('update_user', [
+            $data['_link']['update'] = $this->router->generate('update_user', [
                 'id'=>$user->getClient()->getId(),
                 'userId' => $user->getId(),
             ], UrlGeneratorInterface::ABSOLUTE_URL);
-            $data['/link']['delete']= $this->router->generate('delete_user',
+            $data['_link']['delete']= $this->router->generate('delete_user',
                 [
                 'id'=>$user->getClient()->getId(),
                 'userId' => $user->getId(),

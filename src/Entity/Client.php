@@ -32,7 +32,7 @@ class Client implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string", length=64)
-     * @Groups({"client_details"})
+     * @Groups({"client_details", "create_client"})
      */
     private $username;
 
@@ -40,7 +40,7 @@ class Client implements UserInterface
      * @var string
      *
      * @ORM\Column (type="string", length=64)
-     * @Groups({"list_client"})
+     * @Groups({"list_client","client_details", "create_client"})
      */
     private $name;
 
@@ -49,7 +49,7 @@ class Client implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string", length=50)
-     * @Groups({"list_client", "client_details"})
+     * @Groups({"list_client", "client_details", "create_client"})
      */
     private $mail;
 
@@ -57,7 +57,7 @@ class Client implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string")
-     * @Groups({"client_details"})
+     * @Groups({"client_details", "create_client"})
      */
     private $phoneNumber;
 
@@ -65,7 +65,7 @@ class Client implements UserInterface
      * @var int
      *
      * @ORM\Column(type="integer")
-     * @Groups({"client_details"})
+     * @Groups({"client_details","create_client"})
      */
     private $createdAt;
 
@@ -79,6 +79,7 @@ class Client implements UserInterface
     /**
      * @var string
      * @ORM\Column(type="string")
+     * @Groups({"create_client"})
      */
     private $password;
 
