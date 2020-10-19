@@ -20,6 +20,9 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security as SecureSwag;
+use OpenApi\Annotations as OA;
 
 /**
  * Class ClientController
@@ -54,11 +57,52 @@ class ClientController extends BaseEntityController
     }
 
     /**
+     * Create a client
+     *
+     * <h1>Admin access only</h1>
      * @Route("/clients",name="create_client",methods={"POST"})
      * @param Request $request
      * @param EncoderFactoryInterface $encoderFactory
      * @return Response
      * @IsGranted("ROLE_ADMIN")
+     *
+     * @OA\Response(
+     *     response=201,
+     *     description="CREATED",
+     *     @OA\Header(header="Location", description="Link to client",
+     *          @OA\Schema (
+     *              type="string"
+     *          )
+     *      )
+     *  )
+     *
+     * @OA\Response(
+     *     response=400,
+     *     description="BAD REQUEST"
+     *  )
+     *
+     * @OA\Response(
+     *     response=401,
+     *     description="UNAUTHORIZED - JWT token not found || JWT token expired || Invalid JWT token"
+     *  )
+     *
+     * @OA\Parameter(
+     *     name="HTTP_Authorization",
+     *     in = "header",
+     *     description = "Bearer {Token}",
+     *     required = true
+     * )
+     *
+     * @OA\Parameter (
+     *     name = "JSON",
+     *     in = "query",
+     *     required = true,
+     *     description="Client object that will be created",
+     *     @OA\JsonContent(ref=@Model(type=Client::class, groups={"create_client"}))
+     * )
+     *
+     * @OA\Tag(name="Client")
+     * @SecureSwag(name="Bearer")
      */
     public function createClient(Request $request, EncoderFactoryInterface $encoderFactory)
     {
@@ -91,11 +135,61 @@ class ClientController extends BaseEntityController
     }
 
     /**
+     * Update a client
+     *
+     * <h1>Admin access only</h1>
+     *
      * @Route ("/clients/{id}",name="update_client",methods={"PUT"})
      * @param Client $client
      * @param Request $request
      * @return Response
      * @IsGranted("ROLE_ADMIN")
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="OK",
+     *     @OA\Header(header="Location", description="Link to this client",@OA\Schema (type="string"))
+     *  )
+     *
+     * @OA\Response(
+     *     response=400,
+     *     description="BAD REQUEST"
+     *  )
+     *
+     * @OA\Response(
+     *     response=401,
+     *     description="UNAUTHORIZED - JWT token not found || JWT token expired || Invalid JWT token"
+     *  )
+     *
+     * @OA\Response(
+     *     response=404,
+     *     description="NOT FOUND"
+     *  )
+     *
+     * @OA\Parameter(
+     *     name="HTTP_Authorization",
+     *     in = "header",
+     *     description = "Bearer {Token}",
+     *     required = true
+     * )
+     *
+     * @OA\Parameter (
+     *    name = "id",
+     *    in = "path",
+     *    required = true,
+     *    description="Client's id"
+     * )
+     *
+     * @OA\Parameter (
+     *     name = "JSON",
+     *     in = "query",
+     *     required = true,
+     *     description="Client object that we will update",
+     *     @OA\JsonContent(ref=@Model(type=Client::class, groups={"create_client"}))
+     * )
+     *
+     * @OA\Tag(name="Client")
+     * @SecureSwag(name="Bearer")
      */
     public function updateClient(Client $client, Request $request)
     {
@@ -121,9 +215,36 @@ class ClientController extends BaseEntityController
     }
 
     /**
+     * Get client list
+     *
+     * <h1> Admin access only </h1>
      * @Route("/clients",name="client_list",methods={"GET"})
      * @return Response
      * @IsGranted("ROLE_ADMIN")
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="OK",
+     *     @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property (property="Client",ref=@Model(type=Client::class,groups={"list_client"})),
+     *          @OA\Property (property="links",type="string")
+     *     )
+     *  )
+     * @OA\Response(
+     *     response=401,
+     *     description="UNAUTHORIZED - JWT token not found || JWT token expired || Invalid JWT token",
+     *
+     *  )
+     *
+     * @OA\Parameter(
+     *     name="HTTP_Authorization",
+     *     in="header",
+     *     description="Bearer {Token}",
+     *     required= true
+     * )
+     * @OA\Tag(name="Client")
+     * @SecureSwag(name="Bearer")
      */
     public function clientList()
     {
@@ -133,10 +254,53 @@ class ClientController extends BaseEntityController
     }
 
     /**
+     * Details about one client
+     *
+     * <h1> Access for admin and client's concerned</h1>
      * @Route("/clients/{id}",name="client_details", methods={"GET"})
      * @param Client $client
      * @return Response
      * @IsGranted("ROLE_CLIENT")
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="OK",
+     *     @OA\JsonContent(
+     *         @OA\Property (ref=@Model(type=Client::class, groups={"client_details"})),
+     *         @OA\Property (
+     *              property="_links",
+     *              type="array",
+     *              items=@OA\Items (type="string"),
+     *              example={"update": "string", "delete": "string"})
+     *      )
+     *  )
+     *
+     * @OA\Response(
+     *     response=401,
+     *     description="UNAUTHORIZED - JWT token not found || JWT token expired || Invalid JWT token",
+     *  )
+     *
+     * @OA\Response(
+     *     response=404,
+     *     description="NOT FOUND"
+     *  )
+     *
+     * @OA\Parameter(
+     *     name="HTTP_Authorization",
+     *     in="header",
+     *     description="Bearer {Token}",
+     *     required= true,
+     * )
+     *
+     * @OA\Parameter (
+     *     name="id",
+     *     in="path",
+     *     description="Client's id",
+     *     required=true
+     * )
+     *
+     * @OA\Tag(name="Client")
+     * @SecureSwag(name="Bearer")
      */
     public function clientDetails(Client $client)
     {
@@ -151,10 +315,45 @@ class ClientController extends BaseEntityController
     }
 
     /**
+     * Delete a client
+     *
+     * <h1> Admin access only </h1>
      * @Route("/clients/{id}",name="delete_client",methods={"DELETE"})
      * @param Client $client
      * @return Response
      * @IsGranted("ROLE_ADMIN")
+     *
+     * @OA\Response(
+     *     response=204,
+     *     description="NO CONTENT",
+     *  )
+     *
+     * @OA\Response(
+     *     response=401,
+     *     description="UNAUTHORIZED - JWT token not found || JWT token expired || Invalid JWT token"
+     *  )
+     *
+     * @OA\Response(
+     *     response=404,
+     *     description="NOT FOUND"
+     *  )
+     *
+     * @OA\Parameter(
+     *     name="HTTP_Authorization",
+     *     in = "header",
+     *     description = "Bearer {Token}",
+     *     required = true
+     * )
+     *
+     * @OA\Parameter (
+     *    name = "id",
+     *    in = "path",
+     *    required = true,
+     *    description="Client's id"
+     * )
+     *
+     * @OA\Tag(name="Client")
+     * @SecureSwag(name="Bearer")
      */
     public function clientDelete(Client $client)
     {

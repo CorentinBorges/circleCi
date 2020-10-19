@@ -57,7 +57,7 @@ class PhoneController extends BaseEntityController
      *
      * @OA\Response(
      *     response=200,
-     *     description="Successful operation",
+     *     description="OK",
      *     @OA\JsonContent(
      *          type="object",
      *          @OA\Property (property="Phone",ref=@Model(type=Phone::class,groups={"list_phone"})),
@@ -97,9 +97,9 @@ class PhoneController extends BaseEntityController
      *
      * @OA\Response(
      *     response=200,
-     *     description="Successful operation",
+     *     description="OK",
      *     @OA\JsonContent(
-     *         @OA\Property ( property="phones",ref=@Model(type=Phone::class, groups={"detail_phone"})),
+     *         @OA\Property ( property="Phone detail",ref=@Model(type=Phone::class, groups={"detail_phone"})),
      *         @OA\Property (
      *              property="_links",
      *              type="array",
@@ -260,7 +260,7 @@ class PhoneController extends BaseEntityController
      *     name = "JSON",
      *     in = "query",
      *     required = true,
-     *     description="Phone object that will be created",
+     *     description="Phone object that we will update",
      *     @OA\JsonContent(ref=@Model(type=Phone::class, groups={"detail_phone"}))
      * )
      *
