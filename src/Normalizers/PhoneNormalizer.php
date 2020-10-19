@@ -31,17 +31,17 @@ class PhoneNormalizer implements ContextAwareNormalizerInterface
         $data = $this->normalizer->normalize($phone, $format, $context);
 
         if (in_array('list_phone',$context)) {
-            $data['/link']['self'] = $this->router->generate('detail_phone', [
+            $data['_link']['self'] = $this->router->generate('detail_phone', [
                 'id'=>$phone->getId(),
             ], UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         if ($this->security->isGranted('admin_client')) {
             if (in_array('detail_phone',$context)) {
-                $data['/link']['update'] = $this->router->generate('update_phone', [
+                $data['_link']['update'] = $this->router->generate('update_phone', [
                     'id'=>$phone->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL);
-                $data['/link']['delete'] = $this->router->generate('delete_phone', [
+                $data['_link']['delete'] = $this->router->generate('delete_phone', [
                     'id'=>$phone->getId(),
                 ], UrlGeneratorInterface::ABSOLUTE_URL);
         }
