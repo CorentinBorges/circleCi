@@ -4,6 +4,7 @@
 namespace App\Entity;
 
 
+use App\DTO\User\CreateUser\CreateUserFromFixture;
 use App\DTO\User\CreateUser\CreateUserFromRequestInput;
 use App\DTO\User\UpdateUser\UpdateUserFromRequestInput;
 use App\Repository\ClientRepository;
@@ -74,7 +75,7 @@ class User
         $this->username = $username;
         $this->email = $email;
         $this->client = $client;
-        $this->roles = ['ROLE_ADMIN'];
+        $this->roles = ['ROLE_USER'];
     }
 
     public function getRoles(): array
@@ -117,6 +118,16 @@ class User
             $userDTO->username,
             $userDTO->email,
             $client
+        );
+    }
+
+    public static function createFromFixture(CreateUserFromFixture $userDTO)
+    {
+        return new self(
+            $userDTO->fullName,
+            $userDTO->username,
+            $userDTO->email,
+            $userDTO->client
         );
     }
 

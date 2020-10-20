@@ -177,6 +177,24 @@ class Client implements UserInterface
         $this->password=$clientDTO->password;
     }
 
+    public static function createClientFromFixtures (
+        CreateClientFromRequestInput $clientDTO,
+        EncoderFactoryInterface $encoderFactory,
+        ? array $role=["ROLE_CLIENT"])
+    {
+        $client = new self(
+            $clientDTO->name,
+            $clientDTO->username,
+            $clientDTO->mail,
+            $clientDTO->phoneNumber,
+            $clientDTO->password,
+            $encoderFactory
+        );
+        $client->roles = $role;
+        return $client;
+
+    }
+
     public function getSalt()
     {
         return '';
