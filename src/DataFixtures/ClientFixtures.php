@@ -44,7 +44,7 @@ class ClientFixtures extends Fixture
 
             $client = Client::createClientFromFixtures($clientDTO, $this->encoderFactory);
 
-            $this->setReference(Client::class,$client);
+            $this->setReference(Client::class.'_'.$i,$client);
             $manager->persist($client);
         }
 
