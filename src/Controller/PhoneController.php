@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\DTO\Phone\CreatePhone\CreatePhoneFromRequestInput;
 use App\DTO\Phone\UpdatePhone\UpdatePhoneFromRequestInput;
 use App\Entity\Phone;
+use App\Handlers\PhoneHandler;
 use App\Helper\ViolationBuilder;
 use App\Repository\PhoneRepository;
 use App\Responder\JsonResponder;
@@ -87,16 +88,7 @@ class PhoneController extends BaseEntityController
      */
     public function allPhones( JsonResponder $jsonResponder, Request $request)
     {
-        if ($request->query->get('model')) {
-            $listPhone = $this->phoneRepository->findWith('model', $request->query->get('model'));
-        }
-        elseif ($request->query->get('brand')) {
-            $listPhone = $this->phoneRepository->findWith('brand', $request->query->get('brand'));
-        }
-        else{
-            $listPhone = $this->phoneRepository->findAll();
-        }
-
+        $listPhone = PhoneHandler::build($request, $this->phoneRepository);
         $listJson = $this->serializer->serialize($listPhone, 'json',['groups'=>'list_phone']);
         return $jsonResponder::responder($listJson);
     }
