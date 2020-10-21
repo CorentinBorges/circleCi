@@ -76,8 +76,31 @@ class PhoneController extends BaseEntityController
      *     name="HTTP_Authorization",
      *     in="header",
      *     description="Bearer {Token}",
-     *     required= true
+     *     required= true,
+     *     @OA\Schema(type="string")
      * )
+     *
+     * @OA\Parameter(
+     *     name="page",
+     *     in="path",
+     *     description="Page number if we want to use pagination (start to 0)",
+     *     @OA\Schema(type="integer")
+     * )
+     *
+     * @OA\Parameter(
+     *     name="brand",
+     *     in="query",
+     *     description="Search phones of one brand only",
+     *     @OA\Schema(type="string")
+     * )
+     *
+     * @OA\Parameter(
+     *     name="model",
+     *     in="query",
+     *     description="Find a phone by model's name",
+     *     @OA\Schema(type="string")
+     * )
+     *
      * @OA\Tag(name="Phone")
      * @SecureSwag(name="Bearer")
      *
@@ -126,6 +149,7 @@ class PhoneController extends BaseEntityController
      *     name="HTTP_Authorization",
      *     in="header",
      *     description="Bearer {Token}",
+     *     @OA\Schema(type="string"),
      *     required= true,
      * )
      *
@@ -133,7 +157,8 @@ class PhoneController extends BaseEntityController
      *     name="id",
      *     in="path",
      *     description="Phone's id",
-     *     required=true
+     *     required=true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Tag(name="Phone")
@@ -179,7 +204,8 @@ class PhoneController extends BaseEntityController
      *     name="HTTP_Authorization",
      *     in = "header",
      *     description = "Bearer {Token}",
-     *     required = true
+     *     required = true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\RequestBody  (
@@ -249,7 +275,8 @@ class PhoneController extends BaseEntityController
      *     name="HTTP_Authorization",
      *     in = "header",
      *     description = "Bearer {Token}",
-     *     required = true
+     *     required = true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Parameter (
@@ -320,14 +347,16 @@ class PhoneController extends BaseEntityController
      *     name="HTTP_Authorization",
      *     in = "header",
      *     description = "Bearer {Token}",
-     *     required = true
+     *     required = true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Parameter (
      *    name = "id",
      *    in = "path",
      *    required = true,
-     *    description="Phone's id"
+     *    description="Phone's id",
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Tag(name="Phone")

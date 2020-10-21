@@ -100,14 +100,16 @@ class UserController Extends BaseEntityController
      *     name="HTTP_Authorization",
      *     in="header",
      *     description="Bearer {Token}",
-     *     required= true
+     *     required= true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Parameter (
      *     name="id",
      *     in="path",
      *     description="Client's id",
-     *     required=true
+     *     required=true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Tag(name="User")
@@ -165,20 +167,23 @@ class UserController Extends BaseEntityController
      *     in="header",
      *     description="Bearer {Token}",
      *     required= true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Parameter (
      *     name="id",
      *     in="path",
      *     description="Client's id",
-     *     required=true
+     *     required=true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Parameter (
      *     name="userId",
      *     in="path",
      *     description="User's id",
-     *     required=true
+     *     required=true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Tag(name="User")
@@ -242,14 +247,16 @@ class UserController Extends BaseEntityController
      *     name="HTTP_Authorization",
      *     in = "header",
      *     description = "Bearer {Token}",
-     *     required = true
+     *     required = true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Parameter (
      *     name="id",
      *     in="path",
      *     description="Client's id",
-     *     required=true
+     *     required=true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\RequestBody  (
@@ -323,21 +330,24 @@ class UserController Extends BaseEntityController
      *     name="HTTP_Authorization",
      *     in = "header",
      *     description = "Bearer {Token}",
-     *     required = true
+     *     required = true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Parameter (
      *    name = "id",
      *    in = "path",
      *    required = true,
-     *    description="Client's id"
+     *    description="Client's id",
+     *    @OA\Schema(type="string")
      * )
      *
      * @OA\Parameter (
      *    name = "userId",
      *    in = "path",
      *    required = true,
-     *    description="User's id"
+     *    description="User's id",
+     *    @OA\Schema(type="string")
      * )
      *
      * @OA\RequestBody  (
@@ -414,21 +424,24 @@ class UserController Extends BaseEntityController
      *     name="HTTP_Authorization",
      *     in = "header",
      *     description = "Bearer {Token}",
-     *     required = true
+     *     required = true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Parameter (
      *    name = "id",
      *    in = "path",
      *    required = true,
-     *    description="Client's id"
+     *    description="Client's id",
+     *    @OA\Schema(type="string")
      * )
      *
      * @OA\Parameter (
      *    name = "userId",
      *    in = "path",
      *    required = true,
-     *    description="User's id"
+     *    description="User's id",
+     *    @OA\Schema(type="string")
      * )
      *
      * @OA\Tag(name="User")

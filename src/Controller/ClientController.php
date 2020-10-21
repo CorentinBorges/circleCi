@@ -107,7 +107,8 @@ class ClientController extends BaseEntityController
      *     name="HTTP_Authorization",
      *     in = "header",
      *     description = "Bearer {Token}",
-     *     required = true
+     *     required = true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\RequestBody  (
@@ -185,14 +186,16 @@ class ClientController extends BaseEntityController
      *     name="HTTP_Authorization",
      *     in = "header",
      *     description = "Bearer {Token}",
-     *     required = true
+     *     required = true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Parameter (
      *    name = "id",
      *    in = "path",
      *    required = true,
-     *    description="Client's id"
+     *    description="Client's id",
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\RequestBody  (
@@ -258,7 +261,8 @@ class ClientController extends BaseEntityController
      *     name="HTTP_Authorization",
      *     in="header",
      *     description="Bearer {Token}",
-     *     required= true
+     *     required= true,
+     *     @OA\Schema(type="string")
      * )
      * @OA\Tag(name="Client")
      * @SecureSwag(name="Bearer")
@@ -308,13 +312,15 @@ class ClientController extends BaseEntityController
      *     in="header",
      *     description="Bearer {Token}",
      *     required= true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Parameter (
      *     name="id",
      *     in="path",
      *     description="Client's id",
-     *     required=true
+     *     required=true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Tag(name="Client")
@@ -360,14 +366,16 @@ class ClientController extends BaseEntityController
      *     name="HTTP_Authorization",
      *     in = "header",
      *     description = "Bearer {Token}",
-     *     required = true
+     *     required = true,
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Parameter (
      *    name = "id",
      *    in = "path",
      *    required = true,
-     *    description="Client's id"
+     *    description="Client's id",
+     *     @OA\Schema(type="string")
      * )
      *
      * @OA\Tag(name="Client")
