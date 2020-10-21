@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\DTO\Phone\CreatePhone\CreatePhoneFromRequestInput;
 use App\DTO\Phone\UpdatePhone\UpdatePhoneFromRequestInput;
 use App\Entity\Phone;
+use App\Handlers\PhoneHandler;
 use App\Helper\ViolationBuilder;
 use App\Repository\PhoneRepository;
 use App\Responder\JsonResponder;
@@ -51,9 +52,6 @@ class PhoneController extends BaseEntityController
      * List all phones.
      *
      * <h1>Access for clients, users and admin</h1>
-     * @Route("/phones", name="list_phones", methods={"GET"})
-     * @param JsonResponder $jsonResponder
-     * @return Response
      *
      * @OA\Response(
      *     response=200,
@@ -82,10 +80,15 @@ class PhoneController extends BaseEntityController
      * )
      * @OA\Tag(name="Phone")
      * @SecureSwag(name="Bearer")
+     *
+     * @Route("/phones", name="list_phones", methods={"GET"})
+     * @param JsonResponder $jsonResponder
+     * @param Request $request
+     * @return Response
      */
-    public function allPhones( JsonResponder $jsonResponder)
+    public function allPhones( JsonResponder $jsonResponder, Request $request)
     {
-        $listPhone = $this->phoneRepository->findAll();
+        $listPhone = PhoneHandler::build($request, $this->phoneRepository);
         $listJson = $this->serializer->serialize($listPhone, 'json',['groups'=>'list_phone']);
         return $jsonResponder::responder($listJson);
     }
@@ -94,10 +97,6 @@ class PhoneController extends BaseEntityController
      * One phone description
      *
      * <h1>Access for clients, users and admin</h1>
-     *
-     * @Route("/phones/{id}",name="detail_phone",methods={"GET"})
-     * @param Phone $phone
-     * @return Response
      *
      * @OA\Response(
      *     response=200,
@@ -139,6 +138,11 @@ class PhoneController extends BaseEntityController
      *
      * @OA\Tag(name="Phone")
      * @SecureSwag(name="Bearer")
+     *
+     * @Route("/phones/{id}",name="detail_phone",methods={"GET"})
+     * @param Phone $phone
+     * @return Response
+     *
      */
     public function detailOnePhone(Phone $phone)
     {
@@ -150,10 +154,6 @@ class PhoneController extends BaseEntityController
      * Create a phone
      *
      * <h1>Only Admin access</h1>
-     * @Route ("/phones", name="create_phone", methods={"POST"})
-     * @param Request $request
-     * @return Response
-     * @IsGranted("ROLE_ADMIN")
      *
      * @OA\Response(
      *     response=201,
@@ -190,6 +190,11 @@ class PhoneController extends BaseEntityController
      *
      * @OA\Tag(name="Phone")
      * @SecureSwag(name="Bearer")
+     *
+     * @Route ("/phones", name="create_phone", methods={"POST"})
+     * @param Request $request
+     * @return Response
+     * @IsGranted("ROLE_ADMIN")
      */
     public function createPhone(Request $request)
     {
@@ -218,11 +223,6 @@ class PhoneController extends BaseEntityController
      * Update a phone
      *
      * <h1>Only Admin access</h1>
-     * @Route ("/phones/{id}",name="update_phone",methods={"PUT"})
-     * @param Phone $phone
-     * @param Request $request
-     * @return Response
-     * @IsGranted("ROLE_ADMIN")
      *
      * @OA\Response(
      *     response=200,
@@ -267,6 +267,12 @@ class PhoneController extends BaseEntityController
      *
      * @OA\Tag(name="Phone")
      * @SecureSwag(name="Bearer")
+     *
+     * @Route ("/phones/{id}",name="update_phone",methods={"PUT"})
+     * @param Phone $phone
+     * @param Request $request
+     * @return Response
+     * @IsGranted("ROLE_ADMIN")
      */
     public function updatePhone(Phone $phone, Request $request)
     {
@@ -294,10 +300,6 @@ class PhoneController extends BaseEntityController
      * Delete a phone
      *
      * <h1>Admin access only</h1>
-     * @Route("/phones/{id}",name="delete_phone",methods={"DELETE"})
-     * @param Phone $phone
-     * @return Response
-     * @IsGranted("ROLE_ADMIN")
      *
      * @OA\Response(
      *     response=204,
@@ -330,6 +332,11 @@ class PhoneController extends BaseEntityController
      *
      * @OA\Tag(name="Phone")
      * @SecureSwag(name="Bearer")
+     *
+     * @Route("/phones/{id}",name="delete_phone",methods={"DELETE"})
+     * @param Phone $phone
+     * @return Response
+     * @IsGranted("ROLE_ADMIN")
      */
     public function deletePhone(Phone $phone)
     {
