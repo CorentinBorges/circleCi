@@ -19,4 +19,9 @@ class PhoneRepository extends ServiceEntityRepository
     {
         return $this->findBy(array(),array('createdAt'=>'ASC'));
     }
+
+    public function findWith(string $attr, string $value)
+    {
+        return $this->findBy([$attr => $value], array('createdAt' => 'ASC'));
+    }
 }

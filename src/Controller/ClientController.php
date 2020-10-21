@@ -25,6 +25,20 @@ use Nelmio\ApiDocBundle\Annotation\Security as SecureSwag;
 use OpenApi\Annotations as OA;
 
 /**
+ * Authentication
+ *
+ * @Route  ("/doc.json",name="doc_json",methods={"GET"})
+ * @OA\Response(
+ *     response=200,
+ *     description="OK",
+ * )
+ *
+ * @SWG\Parameter( name="Authorization", in="header", required=true, type="string", default="Bearer TOKEN", description="Authorization" )
+ *
+ * @OA\Tag (name="Doc")
+ */
+
+/**
  * Class ClientController
  * @package App\Controller
  */
@@ -56,17 +70,8 @@ class ClientController extends BaseEntityController
         $this->clientRepository = $clientRepository;
     }
 
-    /**
-     * Authentication
-     *
-     * @Route  ("/doc.json",name="doc_json",methods={"GET"})
-     * @OA\Response(
-     *     response=200,
-     *     description="OK",
-     * )
-     *
-     * @OA\Tag (name="Doc")
-     */
+
+
 
     /**
      * Create a client

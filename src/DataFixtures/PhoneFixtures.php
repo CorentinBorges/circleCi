@@ -27,14 +27,14 @@ class PhoneFixtures extends Fixture
             $phoneDTO->description = $this->faker->text(500);
             $phoneDTO->screenSize = $this->faker->randomFloat(2, 1.00, 7.00);
             if ($i%2 == 1) {
-                $phoneDTO->system = "Android";
-                $phoneDTO->model = "Galaxy S" . ($i + 1);
-                $phoneDTO->brand = "Samsung";
+                $phoneDTO->system = "android";
+                $phoneDTO->model = "galaxy S" . ($i + 1);
+                $phoneDTO->brand = "samsung";
             }
             else{
                 $phoneDTO->system = "iOS";
-                $phoneDTO->model = "Iphone" . ($i + 1);
-                $phoneDTO->brand = "Apple";
+                $phoneDTO->model = "iphone" . ($i + 1);
+                $phoneDTO->brand = "apple";
             }
 
             $phoneDTO->price = $this->faker->randomFloat(2, 10.00, 500.00);
