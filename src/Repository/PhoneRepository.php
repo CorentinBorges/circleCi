@@ -24,13 +24,13 @@ class PhoneRepository extends ServiceEntityRepository
     {
         if ($page === null) {
             if ($attr === null) {
-                $this->findAll();
+              return $this->findAll();
             }
             else{
                 return $this->findBy([$attr=>$value],array('createdAt'=>'ASC'));
             }
         }
-        if ($attr === null || $value===null){
+        if (isset($page) && ($attr === null || $value===null)){
             return $this->findBy(array(),array('createdAt'=>'ASC'),10,$page*10);
         }
         else{

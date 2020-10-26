@@ -109,14 +109,18 @@ class PhoneController extends BaseEntityController
      * @param JsonResponder $jsonResponder
      * @param Request $request
      * @return Response
+     * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function allPhones( JsonResponder $jsonResponder, Request $request)
+    public function allPhones( JsonResponder $jsonResponder, Request $request, CacheInterface $cache)
     {
         $listPhone = PhoneHandler::build($request, $this->phoneRepository);
-//        $listPhone = $cache->get('phones_list', function (ItemInterface $item,Request $request){
-//            return PhoneHandler::build($request, $this->phoneRepository);
-//        });
         $listJson = $this->serializer->serialize($listPhone, 'json',['groups'=>'list_phone']);
+//        $listJson = $cache->get('phones_list', function (ItemInterface $item){
+//            $item->expiresAfter(3600);
+//            $request = new Request();
+//            $list= PhoneHandler::build($request, $this->phoneRepository);
+//            return $this->serializer->serialize($list, 'json',['groups'=>'list_phone']);
+//        });
         return $jsonResponder::responder($listJson);
     }
 
