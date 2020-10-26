@@ -23,7 +23,12 @@ class PhoneRepository extends ServiceEntityRepository
     public function findWithQuery(int $page=null,string $attr=null, string $value=null)
     {
         if ($page === null) {
-            return $this->findBy([$attr=>$value],array('createdAt'=>'ASC'));
+            if ($attr === null) {
+                $this->findAll();
+            }
+            else{
+                return $this->findBy([$attr=>$value],array('createdAt'=>'ASC'));
+            }
         }
         if ($attr === null || $value===null){
             return $this->findBy(array(),array('createdAt'=>'ASC'),10,$page*10);

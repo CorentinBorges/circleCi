@@ -23,7 +23,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security as SecureSwag;
 use OpenApi\Annotations as OA;
-
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 
 class PhoneController extends BaseEntityController
@@ -112,6 +113,9 @@ class PhoneController extends BaseEntityController
     public function allPhones( JsonResponder $jsonResponder, Request $request)
     {
         $listPhone = PhoneHandler::build($request, $this->phoneRepository);
+//        $listPhone = $cache->get('phones_list', function (ItemInterface $item,Request $request){
+//            return PhoneHandler::build($request, $this->phoneRepository);
+//        });
         $listJson = $this->serializer->serialize($listPhone, 'json',['groups'=>'list_phone']);
         return $jsonResponder::responder($listJson);
     }
