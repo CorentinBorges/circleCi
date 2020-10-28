@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Cache\PhoneCache;
 use App\DTO\Phone\CreatePhone\CreatePhoneFromRequestInput;
 use App\DTO\Phone\UpdatePhone\UpdatePhoneFromRequestInput;
 use App\Entity\Phone;
@@ -12,6 +13,7 @@ use App\Helper\ViolationBuilder;
 use App\Repository\PhoneRepository;
 use App\Responder\JsonResponder;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheItemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,18 +38,24 @@ class PhoneController extends BaseEntityController
      * @var FilesystemAdapter
      */
     private $cache;
+    /**
+     * @var PhoneCache
+     */
+    private $phoneCache;
 
     public function __construct(
         SerializerInterface $serializer,
         EntityManagerInterface $em,
         ValidatorInterface $validator,
         PhoneRepository $phoneRepository,
-        Security $security
+        Security $security,
+        PhoneCache $phoneCache
     )
     {
         parent::__construct($serializer,$em,$validator,$security);
         $this->phoneRepository = $phoneRepository;
         $this->cache = new FilesystemAdapter();
+        $this->phoneCache = $phoneCache;
     }
 
     //todo: add better links
@@ -116,15 +124,41 @@ class PhoneController extends BaseEntityController
      */
     public function allPhones( JsonResponder $jsonResponder, Request $request)
     {
-        $listPhone = PhoneHandler::build($request, $this->phoneRepository);
-        $listJson = $this->serializer->serialize($listPhone, 'json',['groups'=>'list_phone']);
-//        $listJson = $cache->get('phones_list', function (ItemInterface $item){
-//            $item->expiresAfter(3600);
-//            $request = new Request();
-//            $list= PhoneHandler::build($request, $this->phoneRepository);
-//            return $this->serializer->serialize($list, 'json',['groups'=>'list_phone']);
-//        });
-        return $jsonResponder::responder($listJson);
+        if ($request->query->get('model') ) {
+            $listJson = $this->phoneCache->buildAllPhones(
+                'phones' . $request->query->get('model'),
+                150,
+                $request
+            );
+        }
+        elseif ($request->query->get('brand')){
+
+            $listJson = $this->phoneCache->buildAllPhones(
+                'phones' . $request->query->get('brand'),
+                150,
+                $request
+            );
+        }
+        elseif ($request->query->get('page')){
+            $listJson = $this->phoneCache->buildAllPhones(
+                'phones' . $request->query->get('page'),
+                150,
+                $request
+            );
+        }
+        else{
+            $listJson = $this->phoneCache->buildAllPhones(
+                'all_phones',
+                150,
+                $request
+            );
+        }
+//
+//            $listPhone= PhoneHandler::build($request, $this->phoneRepository);
+//            $listJson = $this->serializer->serialize($listPhone, 'json',['groups'=>'list_phone']);
+//            return $jsonResponder::responder($listJson);
+//
+        return $jsonResponder::responder($listJson->get());
     }
 
     /**
