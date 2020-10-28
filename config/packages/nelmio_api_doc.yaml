@@ -1,8 +1,8 @@
 nelmio_api_doc:
     areas:
+
         path_patterns: # an array of regexps
             - ^/api(?!/doc$)
-            - ^/api(?!/doc.json$)
 
     documentation:
         servers:
@@ -20,8 +20,81 @@ nelmio_api_doc:
                     type: http
                     scheme: bearer
                     bearerFormat: JWT
+            schemas:
+                loginCheck:
+                    type: object
+                    properties:
+                        username:
+                            type: string
+                        password:
+                            type: string
+                loginsToken:
+                    type: object
+                    properties:
+                        token:
+                            type: string
+                        client:
+                            type: object
+                            properties:
+                                id:
+                                    type: string
+
+
+
         security:
             - Bearer: [ ]
+
+        paths:
+            /api/login_check:
+                post:
+                    summary: "Login to use api"
+                    tags:
+                        - Authentication
+                    requestBody:
+                        description: "Client's id provided by BileMo"
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: "#/components/schemas/loginCheck"
+                    responses:
+                        "200":
+                            description: OK
+                            content:
+                                application/json:
+                                    schema:
+                                        type: array
+                                        items:
+                                            $ref: "#/components/schemas/loginsToken"
+                        "400":
+                            description: BAD REQUEST
+                        "401":
+                            description: "Invalide credentials"
+
+            /api/doc:
+                get:
+                    tags:
+                        - Documentation
+                    summary: "BileMo's documentation"
+                    responses:
+                        "200":
+                            description: "OK"
+
+            /api/doc.json:
+                get:
+                    tags:
+                        - Documentation
+                    summary: "BileMo's documentation formatted in Json"
+                    responses:
+                        "200":
+                            description: "OK"
+
+
+
+
+
+
+
 
 
 

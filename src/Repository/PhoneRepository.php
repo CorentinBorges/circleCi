@@ -5,14 +5,23 @@ namespace App\Repository;
 
 
 use App\Entity\Phone;
+use App\Handlers\PhoneHandler;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class PhoneRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @var CacheInterface
+     */
+    private $cache;
+
+    public function __construct(ManagerRegistry $registry, CacheInterface $cache)
     {
         parent::__construct($registry, Phone::class);
+        $this->cache = $cache;
     }
 
     public function findAll()
@@ -24,7 +33,12 @@ class PhoneRepository extends ServiceEntityRepository
     {
         if ($page === null) {
             if ($attr === null) {
-              return $this->findAll();
+                //todo: test cache
+//                return $this->cache->get('list_all_phones', function (ItemInterface $item){
+//                    $item->expiresAfter(150);
+//                    return $this->findAll();
+//                });
+                return $this->findAll();
             }
             else{
                 return $this->findBy([$attr=>$value],array('createdAt'=>'ASC'));

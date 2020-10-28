@@ -13,6 +13,7 @@ use App\Repository\PhoneRepository;
 use App\Responder\JsonResponder;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,8 +24,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security as SecureSwag;
 use OpenApi\Annotations as OA;
-use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\Cache\ItemInterface;
 
 
 class PhoneController extends BaseEntityController
@@ -33,6 +32,10 @@ class PhoneController extends BaseEntityController
      * @var PhoneRepository
      */
     private $phoneRepository;
+    /**
+     * @var FilesystemAdapter
+     */
+    private $cache;
 
     public function __construct(
         SerializerInterface $serializer,
@@ -44,6 +47,7 @@ class PhoneController extends BaseEntityController
     {
         parent::__construct($serializer,$em,$validator,$security);
         $this->phoneRepository = $phoneRepository;
+        $this->cache = new FilesystemAdapter();
     }
 
     //todo: add better links
@@ -109,9 +113,8 @@ class PhoneController extends BaseEntityController
      * @param JsonResponder $jsonResponder
      * @param Request $request
      * @return Response
-     * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function allPhones( JsonResponder $jsonResponder, Request $request, CacheInterface $cache)
+    public function allPhones( JsonResponder $jsonResponder, Request $request)
     {
         $listPhone = PhoneHandler::build($request, $this->phoneRepository);
         $listJson = $this->serializer->serialize($listPhone, 'json',['groups'=>'list_phone']);

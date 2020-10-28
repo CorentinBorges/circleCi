@@ -102,9 +102,7 @@ class User
     {
         return $this->email;
     }
-
-    //todo: Client can search just his own users without clientName
-
+    
     public function getClient(): Client
     {
         return $this->client;
