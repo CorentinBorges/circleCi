@@ -67,7 +67,6 @@ class PhoneCache
             $this->cache->save($element);
         }
         return $element->get();
-
     }
 
 }

@@ -139,10 +139,6 @@ class UserController Extends BaseEntityController
      * Detail one User
      *
      * <h1>Access for user's owner only</h1>
-     * @Route("/clients/{id}/users/{userId}",name="show_user_details",methods={"GET"})
-     * @param Client $client
-     * @param string $userId
-     * @return Response
      *
      * @OA\Response(
      *     response=200,
@@ -194,6 +190,11 @@ class UserController Extends BaseEntityController
      *
      * @OA\Tag(name="User")
      * @SecureSwag(name="Bearer")
+     *
+     * @Route("/clients/{id}/users/{userId}",name="show_user_details",methods={"GET"})
+     * @param Client $client
+     * @param string $userId
+     * @return Response
      */
     public function userDetails(Client $client, string $userId)
     {
@@ -218,10 +219,6 @@ class UserController Extends BaseEntityController
      * Create a user
      *
      * <h1> Client access only </h1>
-     * @Route ("/clients/{id}/users",name="create_user", methods={"POST"})
-     * @param Client $client
-     * @param Request $request
-     * @return Response
      *
     @OA\Response(
      *     response=201,
@@ -268,6 +265,10 @@ class UserController Extends BaseEntityController
      * @OA\Tag(name="User")
      * @SecureSwag(name="Bearer")
      *
+     * @Route ("/clients/{id}/users",name="create_user", methods={"POST"})
+     * @param Client $client
+     * @param Request $request
+     * @return Response
      */
     public function createUser(Client $client,Request $request)
     {
@@ -300,10 +301,6 @@ class UserController Extends BaseEntityController
      *
      * <h1> User's owner  access only </h1>
      * @Route("/clients/{id}/users/{userId}",name="update_user",methods={"PUT"})
-     * @param Client $client
-     * @param string $userId
-     * @param Request $request
-     * @return Response
      *
      * @OA\Response(
      *     response=200,
@@ -359,6 +356,10 @@ class UserController Extends BaseEntityController
      * @OA\Tag(name="User")
      * @SecureSwag(name="Bearer")
      *
+     * @param Client $client
+     * @param string $userId
+     * @param Request $request
+     * @return Response
      */
     public function updateUser(Client $client, string $userId, Request $request)
     {
@@ -400,12 +401,8 @@ class UserController Extends BaseEntityController
      * Delete user
      *
      * <h1>User's owner only</h1>
-     * @Route("/clients/{id}/users/{userId}",name="delete_user",methods={"DELETE"})
-     * @param Client $client
-     * @param string $userId
-     * @return Response
      *
-    @OA\Response(
+     * @OA\Response(
      *     response=204,
      *     description="NO CONTENT",
      *  )
@@ -447,6 +444,11 @@ class UserController Extends BaseEntityController
      * @OA\Tag(name="User")
      * @SecureSwag(name="Bearer")
      *
+     * @Route("/clients/{id}/users/{userId}",name="delete_user",methods={"DELETE"})
+     * @param Client $client
+     * @param string $userId
+     * @return Response
+     *
      */
     public function deleteUser(Client $client,string $userId)
     {
@@ -465,7 +467,5 @@ class UserController Extends BaseEntityController
         $this->em->flush();
         return JsonResponder::responder(null,Response::HTTP_NO_CONTENT);
     }
-
-
 
 }
