@@ -131,8 +131,7 @@ class UserController Extends BaseEntityController
             $client,
             "Those users are not yours, you can not access to them"
         );
-        $listJson=$this->userCache->buildAllUsersCache('users' . $client->getId(),300,$client);
-
+        $listJson = $this->userCache->allUserCache('users_json', 300, $client);
         return JsonResponder::responder($listJson);
     }
 
@@ -201,7 +200,7 @@ class UserController Extends BaseEntityController
         /**
          * @var User $user
          */
-        $user = $this->userRepository->findOneBy(['id' => $userId]);
+        $user = $this->userCache->findUserCache('user' . $userId, 43200,$userId);
         EntityNotFoundHandler::build($user,'User not found');
         AccessDeniedHandler::build(
             $this->security,
@@ -209,18 +208,8 @@ class UserController Extends BaseEntityController
             $user,
             "You can not see this user's details"
         );
-        $userJson = CacheBuilder::build(
-            'user' . $userId,
-             $this->serializer->serialize(
-                $user,
-                'json',
-                [
-                    'groups' => 'user_details',
-                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['client'],
-                ]
-            ),
-            3600
-        );
+
+        $userJson = $this->userCache->userDetailsCache('user_json' . $userId, 3600, $user);
 
         return JsonResponder::responder($userJson);
     }

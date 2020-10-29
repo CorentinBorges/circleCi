@@ -4,12 +4,10 @@
 namespace App\Controller;
 
 
-use App\Cache\CacheBuilder;
 use App\Cache\PhoneCache;
 use App\DTO\Phone\CreatePhone\CreatePhoneFromRequestInput;
 use App\DTO\Phone\UpdatePhone\UpdatePhoneFromRequestInput;
 use App\Entity\Phone;
-use App\Handlers\PhoneHandler;
 use App\Helper\ViolationBuilder;
 use App\Repository\PhoneRepository;
 use App\Responder\JsonResponder;
@@ -125,30 +123,30 @@ class PhoneController extends BaseEntityController
     public function allPhones( JsonResponder $jsonResponder, Request $request)
     {
         if ($request->query->get('model') ) {
-            $listJson = $this->phoneCache->buildAllPhonesCache(
-                'phones' . $request->query->get('model'),
+            $listJson = $this->phoneCache->allPhonesCache(
+                'phones_json' . $request->query->get('model'),
                 3600,
                 $request
             );
 
         }
         elseif ($request->query->get('brand')){
-            $listJson = $this->phoneCache->buildAllPhonesCache(
-                'phones' . $request->query->get('brand'),
+            $listJson = $this->phoneCache->allPhonesCache(
+                'phones_json' . $request->query->get('brand'),
                 3600,
                 $request
             );
         }
         elseif ($request->query->get('page')){
-            $listJson = $this->phoneCache->buildAllPhonesCache(
-                'phones' . $request->query->get('page'),
+            $listJson = $this->phoneCache->allPhonesCache(
+                'phones_json' . $request->query->get('page'),
                 3600,
                 $request
             );
         }
         else{
-            $listJson = $this->phoneCache->buildAllPhonesCache(
-                'all_phones',
+            $listJson = $this->phoneCache->allPhonesCache(
+                'all_phones_json',
                 3600,
                 $request
             );
@@ -212,11 +210,12 @@ class PhoneController extends BaseEntityController
      */
     public function detailOnePhone(Phone $phone)
     {
-        $phoneJson = CacheBuilder::build(
-            'one_phone' . $phone->getId(),
-            $this->serializer->serialize($phone, 'json',['groups'=>"detail_phone"]),
-            3600
+        $phoneJson = $this->phoneCache->detailPhoneCache(
+            'one_phone_json' . $phone->getId(),
+            3600,
+            $phone
         );
+
         return JsonResponder::responder($phoneJson);
     }
 

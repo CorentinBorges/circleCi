@@ -275,7 +275,7 @@ class ClientController extends BaseEntityController
      */
     public function clientList()
     {
-        $data = $this->clientCache->buildAllClientsCache('all_clients', 300);
+        $data = $this->clientCache->allClientCache('all_clients_json', 300);
         return JsonResponder::responder($data);
     }
 
@@ -340,10 +340,11 @@ class ClientController extends BaseEntityController
             "You can not see this client's details"
         );
 
-        $clientDetails = CacheBuilder::build(
-            'client' . $client->getId(),
-            $this->serializer->serialize($client, 'json',['groups'=>'client_details']),
-            3600);
+        $clientDetails=$this->clientCache->clientDetailCache(
+            'client_json' . $client->getId(),
+            3600,
+            $client
+        );
         return JsonResponder::responder($clientDetails);
     }
 

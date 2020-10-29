@@ -4,8 +4,11 @@
 namespace App\Cache;
 
 
+use App\Entity\Phone;
 use App\Handlers\PhoneHandler;
 use App\Repository\PhoneRepository;
+use Psr\Cache\CacheItemInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -19,6 +22,7 @@ class PhoneCache
      * @var PhoneRepository
      */
     private $phoneRepository;
+    private $cache;
 
     public function __construct(
         SerializerInterface $serializer,
@@ -26,21 +30,41 @@ class PhoneCache
     {
         $this->serializer = $serializer;
         $this->phoneRepository = $phoneRepository;
+        $this->cache = new FilesystemAdapter();
     }
 
-    public function buildAllPhonesCache(string $itemName,int $expiredAfter,Request $request)
+    public function allPhonesCache(string $itemName, int $expiredAfter,Request $request)
     {
-        return CacheBuilder::build(
-            $itemName,
-            $this->phoneDataBuilder($request),
-            $expiredAfter
-        );
+        /**
+         * @var CacheItemInterface $element
+         */
+        $element = $this->cache->getItem($itemName);
+
+        if (!$element->isHit()) {
+            $listPhone= PhoneHandler::build($request, $this->phoneRepository);
+            $dataToSet = $this->serializer->serialize($listPhone, 'json', ['groups' => 'list_phone']);
+            $element->set($dataToSet);
+            $element->expiresAfter($expiredAfter);
+            $this->cache->save($element);
+        }
+        return $element->get();
     }
 
-    private function phoneDataBuilder(Request $request)
+    public function detailPhoneCache($itemName,int $expiredAfter,Phone $phone)
     {
-        $listPhone= PhoneHandler::build($request, $this->phoneRepository);
-        return $this->serializer->serialize($listPhone, 'json', ['groups' => 'list_phone']);
+        /**
+         * @var CacheItemInterface $element
+         */
+        $element = $this->cache->getItem($itemName);
+
+        if (!$element->isHit()) {
+            $dataToSet = $this->serializer->serialize($phone, 'json',['groups'=>"detail_phone"]);
+            $element->set($dataToSet);
+            $element->expiresAfter($expiredAfter);
+            $this->cache->save($element);
+        }
+        return $element->get();
+
     }
 
 }
