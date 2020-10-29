@@ -31,7 +31,7 @@ class UserCache
         return CacheBuilder::build($itemName, $this->allUserData($client), $expiredAfter);
     }
 
-    public function allUserData(Client $client)
+    private function allUserData(Client $client)
     {
         $usersList = $this->userRepository->findBy(['client' => $client]);
         return $this->serializer->serialize($usersList, 'json',['groups'=>'list_users']);

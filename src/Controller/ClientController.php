@@ -3,6 +3,8 @@
 
 namespace App\Controller;
 
+use App\Cache\CacheBuilder;
+use App\Cache\ClientCache;
 use App\DTO\Client\CreateClient\CreateClientFromRequestInput;
 use App\DTO\Client\UpdateClient\UpdateClientFromRequestInput;
 use App\Entity\Client;
@@ -49,6 +51,7 @@ class ClientController extends BaseEntityController
      * @var ClientRepository
      */
     private $clientRepository;
+    private $clientCache;
 
 
     /**
@@ -57,17 +60,20 @@ class ClientController extends BaseEntityController
      * @param ValidatorInterface $validator
      * @param ClientRepository $clientRepository
      * @param Security $security
+     * @param ClientCache $clientCache
      */
     public function __construct(
         SerializerInterface $serializer,
         EntityManagerInterface $em,
         ValidatorInterface $validator,
         ClientRepository $clientRepository,
-        Security $security
+        Security $security,
+        ClientCache $clientCache
     )
     {
         parent::__construct($serializer,$em,$validator,$security);
         $this->clientRepository = $clientRepository;
+        $this->clientCache = $clientCache;
     }
 
 
@@ -269,8 +275,7 @@ class ClientController extends BaseEntityController
      */
     public function clientList()
     {
-        $all = $this->clientRepository->findAll();
-        $data = $this->serializer->serialize($all, 'json',['groups'=>'list_client']);
+        $data = $this->clientCache->buildAllClientsCache('all_clients', 300);
         return JsonResponder::responder($data);
     }
 
@@ -334,7 +339,11 @@ class ClientController extends BaseEntityController
             $client,
             "You can not see this client's details"
         );
-        $clientDetails = $this->serializer->serialize($client, 'json',['groups'=>'client_details']);
+
+        $clientDetails = CacheBuilder::build(
+            'client' . $client->getId(),
+            $this->serializer->serialize($client, 'json',['groups'=>'client_details']),
+            3600);
         return JsonResponder::responder($clientDetails);
     }
 
