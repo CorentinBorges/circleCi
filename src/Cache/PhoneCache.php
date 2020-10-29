@@ -22,6 +22,9 @@ class PhoneCache
      * @var PhoneRepository
      */
     private $phoneRepository;
+    /**
+     * @var FilesystemAdapter
+     */
     private $cache;
 
     public function __construct(

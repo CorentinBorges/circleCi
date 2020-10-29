@@ -23,6 +23,9 @@ class UserCache
      * @var SerializerInterface
      */
     private $serializer;
+    /**
+     * @var FilesystemAdapter
+     */
     private $cache;
 
     public function __construct(UserRepository $userRepository,SerializerInterface $serializer)
@@ -73,7 +76,7 @@ class UserCache
         return $element->get();
     }
 
-    public function findUserCache($itemName,$expiredAfter,$userId)
+    public function findUserCache(string $itemName,int $expiredAfter,string $userId)
     {
         /**
          * @var CacheItemInterface $element

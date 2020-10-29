@@ -83,11 +83,6 @@ class ClientController extends BaseEntityController
      * Create a client
      *
      * <h1>Admin access only</h1>
-     * @Route("/clients",name="create_client",methods={"POST"})
-     * @param Request $request
-     * @param EncoderFactoryInterface $encoderFactory
-     * @return Response
-     * @IsGranted("ROLE_ADMIN")
      *
      * @OA\Response(
      *     response=201,
@@ -125,6 +120,12 @@ class ClientController extends BaseEntityController
      *
      * @OA\Tag(name="Client")
      * @SecureSwag(name="Bearer")
+     *
+     * @Route("/clients",name="create_client",methods={"POST"})
+     * @param Request $request
+     * @param EncoderFactoryInterface $encoderFactory
+     * @return Response
+     * @IsGranted("ROLE_ADMIN")
      */
     public function createClient(Request $request, EncoderFactoryInterface $encoderFactory)
     {
@@ -161,11 +162,6 @@ class ClientController extends BaseEntityController
      *
      * <h1>Admin access only</h1>
      *
-     * @Route ("/clients/{id}",name="update_client",methods={"PUT"})
-     * @param Client $client
-     * @param Request $request
-     * @return Response
-     * @IsGranted("ROLE_ADMIN")
      *
      * @OA\Response(
      *     response=200,
@@ -212,6 +208,12 @@ class ClientController extends BaseEntityController
      *
      * @OA\Tag(name="Client")
      * @SecureSwag(name="Bearer")
+     *
+     * @Route ("/clients/{id}",name="update_client",methods={"PUT"})
+     * @param Client $client
+     * @param Request $request
+     * @return Response
+     * @IsGranted("ROLE_ADMIN")
      */
     public function updateClient(Client $client, Request $request)
     {
@@ -240,9 +242,6 @@ class ClientController extends BaseEntityController
      * Get client list
      *
      * <h1> Admin access only </h1>
-     * @Route("/clients",name="client_list",methods={"GET"})
-     * @return Response
-     * @IsGranted("ROLE_ADMIN")
      *
      * @OA\Response(
      *     response=200,
@@ -272,6 +271,10 @@ class ClientController extends BaseEntityController
      * )
      * @OA\Tag(name="Client")
      * @SecureSwag(name="Bearer")
+     *
+     * @Route("/clients",name="client_list",methods={"GET"})
+     * @return Response
+     * @IsGranted("ROLE_ADMIN")
      */
     public function clientList()
     {
@@ -283,10 +286,6 @@ class ClientController extends BaseEntityController
      * Details about one client
      *
      * <h1> Access for admin and client's concerned</h1>
-     * @Route("/clients/{id}",name="client_details", methods={"GET"})
-     * @param Client $client
-     * @return Response
-     * @IsGranted("ROLE_CLIENT")
      *
      * @OA\Response(
      *     response=200,
@@ -330,6 +329,11 @@ class ClientController extends BaseEntityController
      *
      * @OA\Tag(name="Client")
      * @SecureSwag(name="Bearer")
+     *
+     * @Route("/clients/{id}",name="client_details", methods={"GET"})
+     * @param Client $client
+     * @return Response
+     * @IsGranted("ROLE_CLIENT")
      */
     public function clientDetails(Client $client)
     {
@@ -352,10 +356,6 @@ class ClientController extends BaseEntityController
      * Delete a client
      *
      * <h1> Admin access only </h1>
-     * @Route("/clients/{id}",name="delete_client",methods={"DELETE"})
-     * @param Client $client
-     * @return Response
-     * @IsGranted("ROLE_ADMIN")
      *
      * @OA\Response(
      *     response=204,
@@ -390,6 +390,11 @@ class ClientController extends BaseEntityController
      *
      * @OA\Tag(name="Client")
      * @SecureSwag(name="Bearer")
+     *
+     * @Route("/clients/{id}",name="delete_client",methods={"DELETE"})
+     * @param Client $client
+     * @return Response
+     * @IsGranted("ROLE_ADMIN")
      */
     public function clientDelete(Client $client)
     {
