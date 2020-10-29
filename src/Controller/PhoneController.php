@@ -125,7 +125,7 @@ class PhoneController extends BaseEntityController
     public function allPhones( JsonResponder $jsonResponder, Request $request)
     {
         if ($request->query->get('model') ) {
-            $listJson = $this->phoneCache->buildAllPhones(
+            $listJson = $this->phoneCache->buildAllPhonesCache(
                 'phones' . $request->query->get('model'),
                 150,
                 $request
@@ -133,32 +133,25 @@ class PhoneController extends BaseEntityController
         }
         elseif ($request->query->get('brand')){
 
-            $listJson = $this->phoneCache->buildAllPhones(
+            $listJson = $this->phoneCache->buildAllPhonesCache(
                 'phones' . $request->query->get('brand'),
                 150,
                 $request
             );
         }
         elseif ($request->query->get('page')){
-            $listJson = $this->phoneCache->buildAllPhones(
+            $listJson = $this->phoneCache->buildAllPhonesCache(
                 'phones' . $request->query->get('page'),
                 150,
                 $request
             );
         }
         else{
-            $listJson = $this->phoneCache->buildAllPhones(
-                'all_phones',
-                150,
-                $request
-            );
+
+            $listJson=$this->phoneCache->buildAllPhonesCache('all_phones',150,$request);
         }
-//
-//            $listPhone= PhoneHandler::build($request, $this->phoneRepository);
-//            $listJson = $this->serializer->serialize($listPhone, 'json',['groups'=>'list_phone']);
-//            return $jsonResponder::responder($listJson);
-//
-        return $jsonResponder::responder($listJson->get());
+
+        return $jsonResponder::responder($listJson);
     }
 
     /**

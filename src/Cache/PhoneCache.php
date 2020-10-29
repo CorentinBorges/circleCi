@@ -6,7 +6,6 @@ namespace App\Cache;
 
 use App\Handlers\PhoneHandler;
 use App\Repository\PhoneRepository;
-use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -35,20 +34,15 @@ class PhoneCache
         $this->phoneRepository = $phoneRepository;
         $this->cache = new FilesystemAdapter();
     }
-    public function buildAllPhones(string $itemName, int $expiredAfter, Request $request)
-    {
-        /**
-         * @var CacheItemInterface $listJson
-         */
-        $listJson = $this->cache->getItem($itemName);
 
-        if (!$listJson->isHit()) {
-            $listPhone = PhoneHandler::build($request, $this->phoneRepository);
-            $listJson->set($this->serializer->serialize($listPhone, 'json', ['groups' => 'list_phone']));
-            $listJson->expiresAfter($expiredAfter);
-            $this->cache->save($listJson);
-        }
-        return $listJson;
+    public function buildAllPhonesCache(string $itemName,int $expiredAfter,Request $request)
+    {
+        $listPhone= PhoneHandler::build($request, $this->phoneRepository);
+        return CacheBuilder::build(
+            $itemName,
+            $this->serializer->serialize($listPhone, 'json', ['groups' => 'list_phone']),
+            $expiredAfter
+        );
     }
 
 }
