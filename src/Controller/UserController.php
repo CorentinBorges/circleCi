@@ -4,6 +4,8 @@
 namespace App\Controller;
 
 
+use App\Cache\CacheBuilder;
+use App\Cache\UserCache;
 use App\DTO\User\CreateUser\CreateUserFromRequestInput;
 use App\DTO\User\UpdateUser\UpdateUserFromRequestInput;
 use App\Entity\Client;
@@ -43,7 +45,10 @@ class UserController Extends BaseEntityController
      * @var UserRepository
      */
     private $userRepository;
-
+    /**
+     * @var UserCache
+     */
+    private $userCache;
 
 
     /**
@@ -53,6 +58,7 @@ class UserController Extends BaseEntityController
      * @param ClientRepository $clientRepository
      * @param UserRepository $userRepository
      * @param Security $security
+     * @param UserCache $userCache
      */
     public function __construct(
         SerializerInterface $serializer,
@@ -60,12 +66,14 @@ class UserController Extends BaseEntityController
         ValidatorInterface $validator,
         ClientRepository $clientRepository,
         UserRepository $userRepository,
-        Security $security
+        Security $security,
+        UserCache $userCache
     )
     {
         parent::__construct($serializer, $em, $validator,$security);
         $this->clientRepository = $clientRepository;
         $this->userRepository = $userRepository;
+        $this->userCache = $userCache;
     }
 
 
@@ -123,9 +131,8 @@ class UserController Extends BaseEntityController
             $client,
             "Those users are not yours, you can not access to them"
         );
+        $listJson=$this->userCache->buildAllUsersCache('users' . $client->getId(),300,$client);
 
-        $usersList = $this->userRepository->findBy(['client' => $client]);
-        $listJson = $this->serializer->serialize($usersList, 'json',['groups'=>'list_users']);
         return JsonResponder::responder($listJson);
     }
 
@@ -202,13 +209,17 @@ class UserController Extends BaseEntityController
             $user,
             "You can not see this user's details"
         );
-        $userJson = $this->serializer->serialize(
-            $user,
-            'json',
-            [
-                'groups'=>'user_details',
-                AbstractNormalizer::IGNORED_ATTRIBUTES=>['client'],
-            ]
+        $userJson = CacheBuilder::build(
+            'user' . $userId,
+             $this->serializer->serialize(
+                $user,
+                'json',
+                [
+                    'groups' => 'user_details',
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => ['client'],
+                ]
+            ),
+            3600
         );
 
         return JsonResponder::responder($userJson);

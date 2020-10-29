@@ -4,6 +4,8 @@
 namespace App\Controller;
 
 
+use App\Cache\CacheBuilder;
+use App\Cache\PhoneCache;
 use App\DTO\Phone\CreatePhone\CreatePhoneFromRequestInput;
 use App\DTO\Phone\UpdatePhone\UpdatePhoneFromRequestInput;
 use App\Entity\Phone;
@@ -36,18 +38,24 @@ class PhoneController extends BaseEntityController
      * @var FilesystemAdapter
      */
     private $cache;
+    /**
+     * @var PhoneCache
+     */
+    private $phoneCache;
 
     public function __construct(
         SerializerInterface $serializer,
         EntityManagerInterface $em,
         ValidatorInterface $validator,
         PhoneRepository $phoneRepository,
-        Security $security
+        Security $security,
+        PhoneCache $phoneCache
     )
     {
         parent::__construct($serializer,$em,$validator,$security);
         $this->phoneRepository = $phoneRepository;
         $this->cache = new FilesystemAdapter();
+        $this->phoneCache = $phoneCache;
     }
 
     //todo: add better links
@@ -116,14 +124,36 @@ class PhoneController extends BaseEntityController
      */
     public function allPhones( JsonResponder $jsonResponder, Request $request)
     {
-        $listPhone = PhoneHandler::build($request, $this->phoneRepository);
-        $listJson = $this->serializer->serialize($listPhone, 'json',['groups'=>'list_phone']);
-//        $listJson = $cache->get('phones_list', function (ItemInterface $item){
-//            $item->expiresAfter(3600);
-//            $request = new Request();
-//            $list= PhoneHandler::build($request, $this->phoneRepository);
-//            return $this->serializer->serialize($list, 'json',['groups'=>'list_phone']);
-//        });
+        if ($request->query->get('model') ) {
+            $listJson = $this->phoneCache->buildAllPhonesCache(
+                'phones' . $request->query->get('model'),
+                3600,
+                $request
+            );
+
+        }
+        elseif ($request->query->get('brand')){
+            $listJson = $this->phoneCache->buildAllPhonesCache(
+                'phones' . $request->query->get('brand'),
+                3600,
+                $request
+            );
+        }
+        elseif ($request->query->get('page')){
+            $listJson = $this->phoneCache->buildAllPhonesCache(
+                'phones' . $request->query->get('page'),
+                3600,
+                $request
+            );
+        }
+        else{
+            $listJson = $this->phoneCache->buildAllPhonesCache(
+                'all_phones',
+                3600,
+                $request
+            );
+        }
+
         return $jsonResponder::responder($listJson);
     }
 
@@ -182,7 +212,11 @@ class PhoneController extends BaseEntityController
      */
     public function detailOnePhone(Phone $phone)
     {
-        $phoneJson = $this->serializer->serialize($phone, 'json',['groups'=>"detail_phone"]);
+        $phoneJson = CacheBuilder::build(
+            'one_phone' . $phone->getId(),
+            $this->serializer->serialize($phone, 'json',['groups'=>"detail_phone"]),
+            3600
+        );
         return JsonResponder::responder($phoneJson);
     }
 

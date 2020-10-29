@@ -31,13 +31,8 @@ class PhoneRepository extends ServiceEntityRepository
 
     public function findWithQuery(int $page=null,string $attr=null, string $value=null)
     {
-        if ($page === null) {
+        /*if ($page === null) {
             if ($attr === null) {
-                //todo: test cache
-//                return $this->cache->get('list_all_phones', function (ItemInterface $item){
-//                    $item->expiresAfter(150);
-//                    return $this->findAll();
-//                });
                 return $this->findAll();
             }
             else{
@@ -49,6 +44,17 @@ class PhoneRepository extends ServiceEntityRepository
         }
         else{
             return $this->findBy([$attr=>$value],array('createdAt'=>'ASC'),10,$page*10);
+        }*/
+
+
+        if ($attr === null) {
+            if ($page === null) {
+                return $this->findAll();
+            } else {
+                return $this->findBy(array(),array('createdAt'=>'ASC'),10,$page*10);
+            }
+        } else {
+            return $this->findBy([$attr=>$value],array('createdAt'=>'ASC'));
         }
     }
 }
