@@ -37,12 +37,17 @@ class PhoneCache
 
     public function buildAllPhonesCache(string $itemName,int $expiredAfter,Request $request)
     {
-        $listPhone= PhoneHandler::build($request, $this->phoneRepository);
         return CacheBuilder::build(
             $itemName,
-            $this->serializer->serialize($listPhone, 'json', ['groups' => 'list_phone']),
+            $this->phoneDataBuilder($request),
             $expiredAfter
         );
+    }
+
+    public function phoneDataBuilder(Request $request)
+    {
+        $listPhone= PhoneHandler::build($request, $this->phoneRepository);
+        return $this->serializer->serialize($listPhone, 'json', ['groups' => 'list_phone']);
     }
 
 }

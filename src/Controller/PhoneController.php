@@ -14,7 +14,6 @@ use App\Helper\ViolationBuilder;
 use App\Repository\PhoneRepository;
 use App\Responder\JsonResponder;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Cache\CacheItemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
@@ -128,15 +127,15 @@ class PhoneController extends BaseEntityController
         if ($request->query->get('model') ) {
             $listJson = $this->phoneCache->buildAllPhonesCache(
                 'phones' . $request->query->get('model'),
-                150,
+                3600,
                 $request
             );
+
         }
         elseif ($request->query->get('brand')){
-
             $listJson = $this->phoneCache->buildAllPhonesCache(
                 'phones' . $request->query->get('brand'),
-                150,
+                3600,
                 $request
             );
         }
@@ -148,8 +147,11 @@ class PhoneController extends BaseEntityController
             );
         }
         else{
-
-            $listJson=$this->phoneCache->buildAllPhonesCache('all_phones',150,$request);
+            $listJson = $this->phoneCache->buildAllPhonesCache(
+                'all_phones',
+                3600,
+                $request
+            );
         }
 
         return $jsonResponder::responder($listJson);
