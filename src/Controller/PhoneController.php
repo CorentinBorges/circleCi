@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Cache\CacheBuilder;
 use App\Cache\PhoneCache;
 use App\DTO\Phone\CreatePhone\CreatePhoneFromRequestInput;
 use App\DTO\Phone\UpdatePhone\UpdatePhoneFromRequestInput;
@@ -142,7 +143,7 @@ class PhoneController extends BaseEntityController
         elseif ($request->query->get('page')){
             $listJson = $this->phoneCache->buildAllPhonesCache(
                 'phones' . $request->query->get('page'),
-                150,
+                3600,
                 $request
             );
         }
@@ -209,7 +210,13 @@ class PhoneController extends BaseEntityController
      */
     public function detailOnePhone(Phone $phone)
     {
-        $phoneJson = $this->serializer->serialize($phone, 'json',['groups'=>"detail_phone"]);
+        $phoneJsonData = $this->serializer->serialize($phone, 'json',['groups'=>"detail_phone"]);
+
+        $phoneJson = CacheBuilder::build(
+            'one_phone' . $phone->getId(),
+            $phoneJsonData,
+            3600
+        );
         return JsonResponder::responder($phoneJson);
     }
 
