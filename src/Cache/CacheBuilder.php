@@ -9,7 +9,7 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 class CacheBuilder
 {
-    public static function build(string $itemName, $dataToSet, int $expiredAfter)
+    public static function build(string $itemName,$dataToSet, int $expiredAfter)
     {
         $cache = new FilesystemAdapter();
         /**

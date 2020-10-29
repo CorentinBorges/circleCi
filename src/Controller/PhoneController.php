@@ -212,11 +212,9 @@ class PhoneController extends BaseEntityController
      */
     public function detailOnePhone(Phone $phone)
     {
-        $phoneJsonData = $this->serializer->serialize($phone, 'json',['groups'=>"detail_phone"]);
-
         $phoneJson = CacheBuilder::build(
             'one_phone' . $phone->getId(),
-            $phoneJsonData,
+            $this->serializer->serialize($phone, 'json',['groups'=>"detail_phone"]),
             3600
         );
         return JsonResponder::responder($phoneJson);
