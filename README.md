@@ -37,14 +37,14 @@ The BileMo API to have the best phone catalogue
     ```
 
 5.  Configure your JWT token with SSH key (this is an exemple) :
-    1. Enter this command lines
+    - Enter this command lines
     ```
     $ mkdir -p config/jwt
     $ openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
     $ openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout
     ```
-    2. Adapt your config in [lexik_jwt_authentication.yaml](config/packages/lexik_jwt_authentication.yaml)
-    3. Enter your passphrase in your [.env](.env) file
+    - Adapt your config in [lexik_jwt_authentication.yaml](config/packages/lexik_jwt_authentication.yaml)
+    - Enter your passphrase in your [.env](.env) file
     ```
     JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem
     JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
