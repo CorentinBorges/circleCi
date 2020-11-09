@@ -54,6 +54,10 @@ class UserCache
 
     public function userDetailsCache(string $itemName, int $expiredAfter, User $user)
     {
+        if (strpos($itemName,'test') && $this->cache->hasItem($itemName)) {
+            $this->cache->deleteItem($itemName);
+        }
+
         /**
          * @var CacheItemInterface $element
          */

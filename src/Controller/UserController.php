@@ -131,7 +131,7 @@ class UserController Extends BaseEntityController
             $client,
             "Those users are not yours, you can not access to them"
         );
-        $listJson = $this->userCache->allUserCache('users_json'.$client->getId(), 300, $client);
+        $listJson = $this->userCache->allUserCache('users_json'.$client->getId().$_SERVER['APP_ENV'], 300, $client);
         return JsonResponder::responder($listJson);
     }
 

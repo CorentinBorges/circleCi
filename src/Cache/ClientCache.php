@@ -35,6 +35,10 @@ class ClientCache
 
     public function allClientCache(string $itemName, int $expiredAfter)
     {
+        if (strpos($itemName,'test') && $this->cache->hasItem($itemName)) {
+            $this->cache->deleteItem($itemName);
+        }
+
         /**
          * @var CacheItemInterface $element
          */

@@ -14,6 +14,7 @@ use Faker\Generator;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
@@ -53,6 +54,10 @@ abstract class AbstractWebTestCase extends WebTestCase
      * @var Client
      */
     private $adminClient;
+    /**
+     * @var FilesystemAdapter
+     */
+    protected $cache;
 
     protected function setUp()
     {
@@ -88,38 +93,6 @@ abstract class AbstractWebTestCase extends WebTestCase
             $contentBody
         );
         return $this->apiClient->getResponse();
-    }
-
-    protected function loadPhoneFixtures(){
-
-        for ($i=0; $i < 10; $i++) {
-            $phoneDTO = new CreatePhoneFromRequestInput();
-            $phoneDTO->description = $this->faker->text(500);
-            $phoneDTO->screenSize = $this->faker->randomFloat(2, 1.00, 7.00);
-            if ($i<=5) {
-                $phoneDTO->system = "android";
-                $phoneDTO->model = "galaxy S" . ($i + 1);
-                $phoneDTO->brand = "samsung";
-            }
-            elseif( $i<10 && $i>5){
-                $phoneDTO->system = "iOS";
-                $phoneDTO->model = "iphone" . ($i - 10 + 1);
-                $phoneDTO->brand = "apple";
-            }
-            else{
-                $phoneDTO->system = "android";
-                $phoneDTO->model = "P" . ($i + 1);
-                $phoneDTO->brand = "Huawei";
-            }
-
-            $phoneDTO->price = $this->faker->randomFloat(2, 10.00, 500.00);
-            $phoneDTO->color = $this->faker->safeColorName;
-            $phoneDTO->storage = 8 * $this->faker->numberBetween(1, 16);
-            $phone = Phone::createFromRequest($phoneDTO);
-
-            $this->entityManager->persist($phone);
-        }
-        $this->entityManager->flush();
     }
 
     protected function loadClientFixture()

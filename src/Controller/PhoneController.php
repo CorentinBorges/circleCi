@@ -123,7 +123,7 @@ class PhoneController extends BaseEntityController
     {
         if ($request->query->get('model') ) {
             $listJson = $this->phoneCache->allPhonesCache(
-                'phones_json' . $request->query->get('model'),
+                'phones_json' . $request->query->get('model').$_SERVER['APP_ENV'],
                 3600,
                 $request
             );
@@ -131,14 +131,14 @@ class PhoneController extends BaseEntityController
         }
         elseif ($request->query->get('brand')){
             $listJson = $this->phoneCache->allPhonesCache(
-                'phones_json' . $request->query->get('brand'),
+                'phones_json' . $request->query->get('brand').$_SERVER['APP_ENV'],
                 3600,
                 $request
             );
         }
         elseif ($request->query->get('page')){
             $listJson = $this->phoneCache->allPhonesCache(
-                'phones_json' . $request->query->get('page'),
+                'phones_json' . $request->query->get('page').$_SERVER['APP_ENV'],
                 3600,
                 $request
             );

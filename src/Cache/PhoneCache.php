@@ -38,10 +38,16 @@ class PhoneCache
 
     public function allPhonesCache(string $itemName, int $expiredAfter,Request $request)
     {
+
+        if (strpos($itemName,'test') && $this->cache->hasItem($itemName)) {
+            $this->cache->deleteItem($itemName);
+        }
         /**
          * @var CacheItemInterface $element
          */
         $element = $this->cache->getItem($itemName);
+
+
 
         if (!$element->isHit()) {
             $listPhone= PhoneHandler::build($request, $this->phoneRepository);
@@ -50,6 +56,7 @@ class PhoneCache
             $element->expiresAfter($expiredAfter);
             $this->cache->save($element);
         }
+
         return $element->get();
     }
 

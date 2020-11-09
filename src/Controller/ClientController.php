@@ -104,6 +104,11 @@ class ClientController extends BaseEntityController
      *     description="UNAUTHORIZED - JWT token not found || JWT token expired || Invalid JWT token"
      *  )
      *
+     * @OA\Response(
+     *     response=403,
+     *     description="Forbidden"
+     *  )
+     *
      * @OA\Parameter(
      *     name="HTTP_Authorization",
      *     in = "header",
@@ -223,7 +228,7 @@ class ClientController extends BaseEntityController
             $request->getContent(),
             UpdateClientFromRequestInput::class,
             'json',
-            [AbstractNormalizer::IGNORED_ATTRIBUTES=>['roles','id','password'],
+            [AbstractNormalizer::IGNORED_ATTRIBUTES=>['roles','id'],
             AbstractNormalizer::OBJECT_TO_POPULATE=>$clientDTO]);
 
         $errors = $this->validator->validate($newClient);
@@ -278,7 +283,7 @@ class ClientController extends BaseEntityController
      */
     public function clientList()
     {
-        $data = $this->clientCache->allClientCache('all_clients_json', 300);
+        $data = $this->clientCache->allClientCache('all_clients_json'.$_SERVER['APP_ENV'], 300);
         return JsonResponder::responder($data);
     }
 
