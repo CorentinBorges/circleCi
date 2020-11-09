@@ -56,8 +56,7 @@ class PhoneController extends BaseEntityController
         $this->phoneCache = $phoneCache;
     }
 
-    //todo: add better links
-    //todo: ask for doc.json
+    //todo: add bad request
 
     /**
      * List all phones.
@@ -146,7 +145,7 @@ class PhoneController extends BaseEntityController
         }
         else{
             $listJson = $this->phoneCache->allPhonesCache(
-                'all_phones_json',
+                'all_phones_json'.$_SERVER['APP_ENV'],
                 3600,
                 $request
             );
@@ -243,6 +242,10 @@ class PhoneController extends BaseEntityController
      *     response=401,
      *     description="UNAUTHORIZED - JWT token not found || JWT token expired || Invalid JWT token"
      *  )
+     * @OA\Response(
+     *     response=403,
+     *     description="Forbidden"
+     *  )
      *
      * @OA\Parameter(
      *     name="HTTP_Authorization",
@@ -295,8 +298,8 @@ class PhoneController extends BaseEntityController
      * <h1>Only Admin access</h1>
      *
      * @OA\Response(
-     *     response=200,
-     *     description="OK",
+     *     response=204,
+     *     description="NO CONTENT",
      *     @OA\Header(header="Location", description="Link to phone",@OA\Schema (type="string"))
      *  )
      *

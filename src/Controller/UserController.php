@@ -131,7 +131,7 @@ class UserController Extends BaseEntityController
             $client,
             "Those users are not yours, you can not access to them"
         );
-        $listJson = $this->userCache->allUserCache('users_json', 300, $client);
+        $listJson = $this->userCache->allUserCache('users_json'.$client->getId(), 300, $client);
         return JsonResponder::responder($listJson);
     }
 
@@ -303,8 +303,8 @@ class UserController Extends BaseEntityController
      * @Route("/clients/{id}/users/{userId}",name="update_user",methods={"PUT"})
      *
      * @OA\Response(
-     *     response=200,
-     *     description="OK",
+     *     response=204,
+     *     description="NO CONTENT",
      *     @OA\Header(header="Location", description="Link to user",@OA\Schema (type="string"))
      *  )
      *

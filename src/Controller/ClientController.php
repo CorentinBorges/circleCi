@@ -164,8 +164,8 @@ class ClientController extends BaseEntityController
      *
      *
      * @OA\Response(
-     *     response=200,
-     *     description="OK",
+     *     response=204,
+     *     description="NO CONTENT",
      *     @OA\Header(header="Location", description="Link to this client",@OA\Schema (type="string"))
      *  )
      *

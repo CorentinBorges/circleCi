@@ -192,7 +192,6 @@ class Client implements UserInterface
         );
         $client->roles = $role;
         return $client;
-
     }
 
     public function getSalt()
@@ -208,5 +207,10 @@ class Client implements UserInterface
     public function isAdmin()
     {
         return in_array("ROLE_ADMIN", $this->getRoles());
+    }
+
+    public static function makeAdmin(Client $client)
+    {
+        $client->roles = ['ROLE_ADMIN'];
     }
 }

@@ -10,7 +10,6 @@ use Symfony\Component\Validator\ConstraintValidator;
 class isUniqueValidator extends ConstraintValidator
 {
 
-
     /**
      * @var ManagerRegistry
      */
@@ -18,7 +17,6 @@ class isUniqueValidator extends ConstraintValidator
 
     public function __construct(ManagerRegistry $managerRegistry)
     {
-
         $this->managerRegistry = $managerRegistry;
     }
     public function validate($value, Constraint $constraint)
