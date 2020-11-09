@@ -207,26 +207,4 @@ class ClientControllerTest extends AbstractWebTestCase
         self::assertEquals(403,$response->getStatusCode());
         self::assertStringContainsString('unauthorized', $response->getContent());
     }
-
-
-
-
-
-
-    public function createNewClient()
-    {
-        $client= new Client(
-            'JhonDoeEntreprise',
-            'JoeDoeUsername',
-            'JoeDoe@gmail.com',
-            '0685734986',
-            'ClientBilemo0',
-            $this->encoderFactory
-        );
-        $this->entityManager->persist($client);
-        $this->entityManager->flush();
-        return $client;
-    }
-
-
 }

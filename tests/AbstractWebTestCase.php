@@ -4,9 +4,7 @@
 namespace App\Tests;
 
 
-use App\DTO\Phone\CreatePhone\CreatePhoneFromRequestInput;
 use App\Entity\Client;
-use App\Entity\Phone;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Faker\Factory;
@@ -50,10 +48,7 @@ abstract class AbstractWebTestCase extends WebTestCase
      * @var Client
      */
     protected $client;
-    /**
-     * @var Client
-     */
-    private $adminClient;
+
     /**
      * @var FilesystemAdapter
      */
@@ -106,5 +101,20 @@ abstract class AbstractWebTestCase extends WebTestCase
             $this->encoderFactory);
         $this->entityManager->persist($this->client);
         $this->entityManager->flush();
+    }
+
+    public function createNewClient()
+    {
+        $client= new Client(
+            'JhonDoeEntreprise',
+            'JoeDoeUsername',
+            'JoeDoe@gmail.com',
+            '0685734986',
+            'ClientBilemo0',
+            $this->encoderFactory
+        );
+        $this->entityManager->persist($client);
+        $this->entityManager->flush();
+        return $client;
     }
 }

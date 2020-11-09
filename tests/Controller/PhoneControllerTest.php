@@ -12,12 +12,6 @@ use Symfony\Component\Uid\Uuid;
 
 class PhoneControllerTest extends AbstractWebTestCase
 {
-
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function testListPhoneAppearWithClient()
     {
         $this->loadPhoneFixtures();

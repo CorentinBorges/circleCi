@@ -81,9 +81,6 @@ class UserController Extends BaseEntityController
      * User's list for one client
      *
      * <h1>Access for user's owner only</h1>
-     * @Route("/clients/{id}/users",name="show_users",methods={"GET"})
-     * @param Client $client
-     * @return Response
      *
      * @OA\Response(
      *     response=200,
@@ -122,6 +119,10 @@ class UserController Extends BaseEntityController
      *
      * @OA\Tag(name="User")
      * @SecureSwag(name="Bearer")
+     *
+     * @Route("/clients/{id}/users",name="show_users",methods={"GET"})
+     * @param Client $client
+     * @return Response
      */
     public function usersListForOneClient(Client $client)
     {
