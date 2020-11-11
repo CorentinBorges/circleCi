@@ -11,6 +11,8 @@ use App\Entity\User;
 use App\Helper\ViolationBuilder;
 use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
+use App\Responder\ExceptionResponder\AccessDeniedJsonResponder;
+use App\Responder\ExceptionResponder\EntityNotFoundResponder;
 use App\Responder\JsonResponder;
 use App\Validator\ExceptionHandler\AccessDeniedHandler;
 use App\Validator\ExceptionHandler\EntityNotFoundHandler;
@@ -123,12 +125,17 @@ class UserController extends BaseEntityController
      */
     public function usersListForOneClient(Client $client)
     {
-        AccessDeniedHandler::build(
-            $this->security,
-            'showUsersList',
-            $client,
-            "Those users are not yours, you can not access to them"
-        );
+
+
+        if (!$this->security->isGranted('showUsersList', $client)) {
+            return JsonResponder::responder(
+                json_encode([
+                    "error" => [
+                    'Message' => "Access denied",
+                    'details' => 'Those users are not yours, you can not access to them']]),
+                Response::HTTP_FORBIDDEN
+            );
+        }
         $listJson = $this->userCache->allUserCache('users_json' . $client->getId() . $_SERVER['APP_ENV'], 300, $client);
         return JsonResponder::responder($listJson);
     }
@@ -200,13 +207,12 @@ class UserController extends BaseEntityController
          * @var User $user
          */
         $user = $this->userCache->findUserCache('user' . $userId, 43200, $userId);
-        EntityNotFoundHandler::build($user, 'User not found');
-        AccessDeniedHandler::build(
-            $this->security,
-            'show',
-            $user,
-            "You can not see this user's details"
-        );
+        if (!isset($user)) {
+            return EntityNotFoundResponder::build('User not found', "User doesn't exist");
+        }
+        if (!$this->security->isGranted('showUser', $user)) {
+            return AccessDeniedJsonResponder::build("You can not see this users details");
+        }
 
         $userJson = $this->userCache->userDetailsCache('user_json' . $userId, 3600, $user);
 
@@ -371,13 +377,13 @@ class UserController extends BaseEntityController
          * @var User $user
          */
         $user = $this->userRepository->findOneBy(['id' => $userId]);
-        EntityNotFoundHandler::build($user, 'User not found');
-        AccessDeniedHandler::build(
-            $this->security,
-            'edit',
-            $user,
-            "You can not edit this user"
-        );
+        if (!isset($user)) {
+            return EntityNotFoundResponder::build('User not found', "User doesn't exist");
+        }
+
+        if (!$this->security->isGranted('editUser', $user)) {
+            return AccessDeniedJsonResponder::build("You can not edit this user");
+        }
         $userDTO = new UpdateUserFromRequestInput();
         $userDTO->setId($user->getId());
         $newUser = $this->serializer->deserialize(
@@ -462,13 +468,14 @@ class UserController extends BaseEntityController
          * @var User $user
          */
         $user = $this->userRepository->findOneBy(['id' => $userId]);
-        EntityNotFoundHandler::build($user, 'User not found');
-        AccessDeniedHandler::build(
-            $this->security,
-            'delete',
-            $user,
-            "You can not delete this user"
-        );
+        if (!isset($user)) {
+            return EntityNotFoundResponder::build('User not found', "User doesn't exist");
+        }
+
+        if (!$this->security->isGranted('editUser', $user)) {
+            return AccessDeniedJsonResponder::build("You can not delete this user");
+        }
+
         $this->em->remove($user);
         $this->em->flush();
         return JsonResponder::responder(null, Response::HTTP_NO_CONTENT);

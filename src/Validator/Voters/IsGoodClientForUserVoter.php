@@ -9,9 +9,9 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class IsGoodClientForUserVoter extends Voter
 {
-    public const DELETE = 'delete';
-    public const EDIT = 'edit';
-    public const SHOW = 'show';
+    public const DELETE = 'deleteUser';
+    public const EDIT = 'editUser';
+    public const SHOW = 'showUser';
 
     protected function supports(string $attribute, $subject)
     {
@@ -28,6 +28,7 @@ class IsGoodClientForUserVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token)
     {
+
         $client = $token->getUser();
 
         if (!$client instanceof Client) {

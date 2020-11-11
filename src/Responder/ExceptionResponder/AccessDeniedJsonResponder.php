@@ -2,18 +2,20 @@
 
 namespace App\Responder\ExceptionResponder;
 
+use App\Responder\JsonResponder;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class AccessDeniedJsonResponder
 {
-    public static function build(AccessDeniedHttpException $exception)
+    public static function build($message)
     {
-        echo json_encode(array("error" => [
-            'Message' => "Access denied",
-            'details' => $exception->getMessage()
-        ]));
-        http_response_code(403);
-        header('Content-Type: application/json');
-        exit;
+        return JsonResponder::responder(
+            json_encode([
+                "error" => [
+                    'Message' => "Access denied",
+                    'details' => $message]]),
+            Response::HTTP_FORBIDDEN
+        );
     }
 }

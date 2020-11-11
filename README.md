@@ -1,6 +1,6 @@
 # BileMo API
 
-<a href="https://codeclimate.com/github/CorentinBorges/snowtricks/maintainability"><img src="https://api.codeclimate.com/v1/badges/41f82ca455bdf5dc12fd/maintainability" /></a>
+<a href="https://codeclimate.com/github/CorentinBorges/bileMo/maintainability"><img src="https://api.codeclimate.com/v1/badges/00d77ce3da0f8fc0245c/maintainability" /></a>
 
 The BileMo API to have the best phone catalogue
 
