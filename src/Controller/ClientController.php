@@ -8,6 +8,8 @@ use App\DTO\Client\UpdateClient\UpdateClientFromRequestInput;
 use App\Entity\Client;
 use App\Helper\ViolationBuilder;
 use App\Repository\ClientRepository;
+use App\Responder\ExceptionResponder\AccessDeniedJsonResponder;
+use App\Responder\ExceptionResponder\EntityNotFoundResponder;
 use App\Responder\JsonResponder;
 use App\Validator\ExceptionHandler\AccessDeniedHandler;
 use Doctrine\ORM\EntityManagerInterface;
@@ -346,12 +348,10 @@ class ClientController extends BaseEntityController
      */
     public function clientDetails(Client $client)
     {
-        AccessDeniedHandler::build(
-            $this->security,
-            'showClientDetail',
-            $client,
-            "You can not see this client's details"
-        );
+
+        if (!$this->security->isGranted('showClientDetail', $client)) {
+            return AccessDeniedJsonResponder::build("You can not see this client's details");
+        }
 
         $clientDetails = $this->clientCache->clientDetailCache(
             'client_json' . $client->getId(),

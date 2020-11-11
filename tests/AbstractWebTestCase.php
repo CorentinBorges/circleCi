@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Tests;
-
 
 use App\Entity\Client;
 use Doctrine\ORM\EntityManagerInterface;
@@ -72,10 +70,10 @@ abstract class AbstractWebTestCase extends WebTestCase
         $this->loadClientFixture();
     }
 
-    protected function request(string $methode, string $uri,? Client $client = null, $contentBody = null) :Response
+    protected function request(string $methode, string $uri, ?Client $client = null, $contentBody = null): Response
     {
         if (isset($client)) {
-            $this->apiClient->setServerParameter('HTTP_Authorization', 'Bearer '.$this->jwtManager->create($client));
+            $this->apiClient->setServerParameter('HTTP_Authorization', 'Bearer ' . $this->jwtManager->create($client));
         }
         $this->apiClient->request(
             $methode,
@@ -98,14 +96,15 @@ abstract class AbstractWebTestCase extends WebTestCase
             'testmail@gmail.com',
             '0145354686',
             '123456',
-            $this->encoderFactory);
+            $this->encoderFactory
+        );
         $this->entityManager->persist($this->client);
         $this->entityManager->flush();
     }
 
     public function createNewClient()
     {
-        $client= new Client(
+        $client = new Client(
             'JhonDoeEntreprise',
             'JoeDoeUsername',
             'JoeDoe@gmail.com',
