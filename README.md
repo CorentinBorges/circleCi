@@ -57,6 +57,8 @@ The BileMo API to have the best phone catalogue
     ```
 Your url must be 127.0.0.1:8000 if you don't have any other projects running with symfony at the same time.
 
+## API Documentation
+Access to api documentation: host:port/api/doc
 
 ## Built With
 *   [Symfony 5.1](https://symfony.com/)

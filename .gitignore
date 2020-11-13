@@ -13,7 +13,8 @@
 ###< symfony/framework-bundle ###
 
 ###> lexik/jwt-authentication-bundle ###
-/config/jwt/*.pem
+/config/jwt/private.pem
+/config/jwt/public.pem
 ###< lexik/jwt-authentication-bundle ###
 
 ###> squizlabs/php_codesniffer ###
