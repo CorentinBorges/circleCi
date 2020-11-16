@@ -1,0 +1,104 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/php:7.4-node-browsers
+    steps:
+      - checkout
+
+      - run: sudo apt update
+      - run: sudo docker-php-ext-install zip
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "composer.json" }}
+            - v1-dependencies-
+      - run:
+          name: "Install Dependencies"
+          command: composer install --dev
+
+      - save-cache:
+          key: v1-dependencies-{{ checksum "composer.json" }}
+          paths:
+            - ./vendor
+
+      - run:
+          name: "Run test"
+          command: ./vendor/bin/simple-phpunit tests/Controller
+
+
+
+#version: 2
+#jobs:
+#  one:
+#    docker:
+#      - image: circleci/php:7.2-fpm-stretch-node-browsers-legacy
+#    steps:
+#      - checkout
+#      - run: echo "coucou le test"
+#  two:
+#    docker:
+#      - image: circleci/php:7.2-fpm-stretch-node-browsers-legacy
+#    steps:
+#      - checkout
+#      - run: echo "coucou le test 2"
+#
+#workflows:
+#  version: 2
+#  one_and_two:
+#    jobs:
+#      - one
+#      - two
+
+
+#version: 2
+#jobs:
+#  build:
+#    docker:
+##      - image: circleci/php:7.2-fpm
+#      - image: amorvan/test-php74-fpm
+#      - image: circleci/ruby:2.4.2-jessie-node
+#    steps:
+#      - checkout
+#      -   run:
+#            name: "Update Node.js and npm"
+#            command: |
+#              curl -sSL "https://nodejs.org/dist/v11.10.0/node-v11.10.0-linux-x64.tar.xz" | sudo tar --strip-components=2 -xJ -C /usr/local/bin/ node-v11.10.0-linux-x64/bin/node
+#              curl https://www.npmjs.com/install.sh | sudo bash
+#      - run: sudo php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+#      - run: sudo php composer-setup.php
+#      - run: sudo php -r "unlink('composer-setup.php');"
+#      - run: sudo composer update
+#      - run: sudo php -d memory_limit=-1 composer.phar install -n --optimize-autoloader --apcu-autoloader
+#      - run: sudo php -d memory_limit=-1 composer.phar dump-autoload --optimize --apcu
+#      - run: ./bin/console d:d:c --env=test
+#      - run: ./bin/console d:s:u --env=test --force
+#      - run: npm install
+#      - run: npm run build
+#      - run:
+#          name: Install PHP libzip-dev
+#          command: sudo apt-get install -y libzip-dev
+#      - run:
+#          name: Install PHP zip
+#          command: sudo docker-php-ext-install zip
+#      - run:
+#          name: Check Coding Style
+#          command: vendor/bin/phpcs
+#      - run:
+#          name: Check Deptrac
+#          command: vendor/bin/deptrac
+#      - run:
+#          name: Check PHPStan
+#          command: vendor/bin/phpstan analyze src
+#      - run:
+#          name: Valid functional tests
+#          command: vendor/bin/behat
+#      -   run:
+#            name: Valid unit tests
+#            command: vendor/bin/simple-phpunit
+#
+#workflows:
+#  version: 2
+#  checker:
+#    jobs:
+#      - build
+
