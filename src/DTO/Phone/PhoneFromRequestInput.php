@@ -30,9 +30,9 @@ abstract class PhoneFromRequestInput
      *
      *@Assert\Range(
      *     min="10.00",
-     *     minMessage="The price can't be under 10",
      *     max="5000",
-     *     maxMessage="The price can't exceed 5000"))
+     *     notInRangeMessage="price can not be over 5000 and under 10.00"
+     *     ))
      * @AcmeAssert\TwoDecimalMax
      * @Assert\Type (type="float", message="Price has to be float type")
      * @Assert\NotBlank (message="You have to enter a price")
@@ -52,9 +52,8 @@ abstract class PhoneFromRequestInput
      * @Assert\Type(type="float", message="Screen size has to be a float type")
      * @Assert\Range(
      *     max="10",
-     *     maxMessage="Screen size can't exceed 10",
      *     min="0",
-     *     minMessage="Sreen size can't be under 0")
+     *     notInRangeMessage="screen size can not be over 10 and under 0")
      * @AcmeAssert\TwoDecimalMax
      */
     public $screenSize;
