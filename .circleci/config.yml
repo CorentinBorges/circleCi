@@ -23,9 +23,7 @@ jobs:
 
       - run:
           name: "Run test"
-          command: |
-            set +e
-            ./vendor/bin/simple-phpunit tests/Controller
+          command: ./vendor/bin/simple-phpunit tests/Controller
 
 
 
